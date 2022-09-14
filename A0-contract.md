@@ -42,9 +42,9 @@ Student Number:	20155632
 
 Team Member #2:
 
-Name:
+Name: Brian Cho
 
-Student Number:	
+Student Number: 20200952
 
 
 Team Member #3:
