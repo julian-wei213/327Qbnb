@@ -49,9 +49,9 @@ Student Number: 20200952
 
 Team Member #3:
 
-Name:
+Name: Julian Wei
 
-Student Number:	
+Student Number:	20237439
 
 
 Team Member #4:
