@@ -56,6 +56,6 @@ Student Number:	20237439
 
 Team Member #4:
 
-Name:
+Name: Lavi Ionas
 
-Student Number:	
+Student Number:	20111434
