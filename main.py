@@ -9,3 +9,6 @@ db = SQLAlchemy(app)
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     stars = db.Column(db.Numeric)
+
+    def __repr__(self):
+        return '<Rating %r>' % self.stars
