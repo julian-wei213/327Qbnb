@@ -15,12 +15,3 @@ class Listing(db.Model):
 
     def __repr__(self):
         return '<Listing %r>' % self.id
-
-    def get_address(self):
-        return '<Listing %r>' % self.address
-
-    def get_price(self):
-        return '<Listing %r>' % self.price
-
-    def get_owner(self):
-        return '<Listing %r>' % self.owner
