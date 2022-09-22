@@ -1,7 +1,7 @@
 * **Please check if the PR fulfills these requirements**
-- [ ] The commit message follows our guidelines
-- [ ] Tests for the changes have been added (for bug fixes / features)
-- [ ] Docs have been added / updated (for bug fixes / features)
-- [ ] At least 2 reviewers have been assigned 
-- [ ] All code follows coding style (pep8) 
-
+- [ ] The commit message follows our (descriptive / on-topic / traceable)
+- [ ] Tests for the changes have been made for expected features
+- [ ] Tests for possible edge cases have been implemented
+- [ ] Code and Tests cases are well documented
+- [ ] At least 2 reviewers have been assigned
+- [ ] All code follows coding style (pep8)
