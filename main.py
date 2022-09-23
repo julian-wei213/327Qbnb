@@ -14,9 +14,9 @@ class Transaction(db.Model):
     id : Integer
         represents a unique id
     listing_id : Integer
-        represents the associated listing in database
+        represents the id of associated listing in database
     user_id : Integer
-        represents the user in database that booked the listing
+        represents the id of user in database that booked the listing
     """
     id = db.Column(db.Integer, primary_key=True)
     listing_id = db.Column(db.Integer, nullable=False)
@@ -25,5 +25,5 @@ class Transaction(db.Model):
     def __repr__(self):
         """Returns the string representation of Transaction"""
         return '<%r booking %r>' % \
-            Listing.query.filter_by(id=self.listing_id), \
-            User.query.filter_by(id=self.user_id)
+            (Listing.query.filter_by(id=self.listing_id),
+                User.query.filter_by(id=self.user_id))
