@@ -7,8 +7,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(app)
 
 class Rating(db.Model):
+    """Data model for Rating
+
+    Properties: 
+    - id (Integer)
+    - stars (Numeric)
+    """
     id = db.Column(db.Integer, primary_key=True)
     stars = db.Column(db.Numeric)
 
     def __repr__(self):
+        """Returns the string representation of Rating"""
         return '<Rating %r>' % self.stars
