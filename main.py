@@ -14,7 +14,7 @@ class Rating(db.Model):
     - stars (Numeric)
     """
     id = db.Column(db.Integer, primary_key=True)
-    stars = db.Column(db.Numeric)
+    stars = db.Column(db.Numeric, nullable=False)
 
     def __repr__(self):
         """Returns the string representation of Rating"""
