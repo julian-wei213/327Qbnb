@@ -1,10 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-// setting up SQLAlchemy and data models so we can map data models into database tables
+# setting up SQLAlchemy and data models so we can map into db tables
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(app)
+
 
 class User(db.Model):
     """
@@ -33,3 +34,21 @@ class User(db.Model):
     def __repr__(self):
         """Returns a string representing the class object"""
         return '<User %r>' % self.email
+
+
+class Rating(db.Model):
+    """Data model for Rating
+
+    Attributes
+    ----------
+    id : Integer
+        represents a unique id
+    stars : Numeric
+        represents the star rating
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    stars = db.Column(db.Numeric, nullable=False)
+
+    def __repr__(self):
+        """Returns the string representation of Rating"""
+        return '<Rating %r>' % self.stars
