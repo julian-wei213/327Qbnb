@@ -6,20 +6,6 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(app)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class User(db.Model):
     """
     User data model
