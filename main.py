@@ -8,10 +8,26 @@ db = SQLAlchemy(app)
 
 
 class Listing(db.Model):
-    id = db.Column(db.Integer, primary_key=true)
-    address = db.Column(db.String)
-    price = db.Column(db.Integer)
-    owner = db.Column(db.Integer)
+    """
+    Listing class
+
+    Attributes:
+    ----------
+    id : int
+        primary key for the data table
+    address : str
+        string representing address of the listing, cannot be null
+    price : float
+        float representing the cost of the listing per night, cannot be null
+    owner : int
+        integer representing the id of the owner in the User table
+    """
+
+    id = db.Column(db.Integer, primary_key=True)
+    address = db.Column(db.String, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    owner = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
+        # Return a str representing the id of the Listing class
         return '<Listing %r>' % self.id
