@@ -9,7 +9,7 @@ db = SQLAlchemy(app)
 class Rating(db.Model):
     """Data model for Rating
 
-    Properties: 
+    Properties:
     - id (Integer)
     - stars (Numeric)
     """
