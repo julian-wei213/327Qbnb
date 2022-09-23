@@ -9,9 +9,12 @@ db = SQLAlchemy(app)
 class Rating(db.Model):
     """Data model for Rating
 
-    Properties:
-    - id (Integer)
-    - stars (Numeric)
+    Attributes
+    ----------
+    id : Integer
+        represents a unique id
+    stars : Numeric
+        represents the star rating
     """
     id = db.Column(db.Integer, primary_key=True)
     stars = db.Column(db.Numeric, nullable=False)
