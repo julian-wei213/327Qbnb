@@ -49,4 +49,3 @@ class Rating(db.Model):
     def __repr__(self):
         """Returns the string representation of Rating"""
         return '<Rating %r>' % self.stars
-
