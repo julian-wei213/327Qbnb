@@ -6,6 +6,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(app)
 
+
 class Listing(db.Model):
     """
     Listing class
@@ -30,6 +31,7 @@ class Listing(db.Model):
     def __repr__(self):
         # Return a str representing the id of the Listing class
         return '<Listing %r>' % self.id
+
 
 class User(db.Model):
     """
@@ -76,3 +78,24 @@ class Rating(db.Model):
     def __repr__(self):
         """Returns the string representation of Rating"""
         return '<Rating %r>' % self.stars
+
+
+class Transaction(db.Model):
+    """Data model for Transactions
+
+    Attributes
+    ----------
+    listing_id : Integer
+        represents the id of associated listing in database
+    user_id : Integer
+        represents the id of user in database that booked the listing
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    listing_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        """Returns the string representation of Transaction"""
+        return '<%r booking %r>' % \
+            (Listing.query.filter_by(id=self.listing_id),
+                User.query.filter_by(id=self.user_id))
