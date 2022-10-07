@@ -68,12 +68,17 @@ def test_r4_1_create_listing():
 
 
 def test_r5_1_update_listing():
+    '''
+    Testing R5-1: One can update all attributes of the listing,
+    except owner_id and last_modified_date.
+    '''
     listing = Listing.query.filter_by().first()
 
     # Test update title
     ntitle = "new title"
     assert (ntitle == listing.title) is False
 
+    # Test whether listing.title got updated
     update_listing(listing, title=str(ntitle))
     assert (ntitle == listing.title) is True
 
@@ -81,51 +86,76 @@ def test_r5_1_update_listing():
     long_description = "This is a detailed description with no grammar"
     assert (long_description == listing.description) is False
 
+    # Test whether listing.description got updated
     update_listing(listing, description=str(long_description))
     assert (long_description == listing.description) is True
 
     # Test update price
+
+    # Test price > 10000 constraint
     f = float(21000)
     assert update_listing(listing, price=f) is None
+
+    # Test price < 10 constraint
     f = float(2)
     assert update_listing(listing, price=f) is None
 
+    # Test whether listing.price got updated
     f = float(5000)
     assert update_listing(listing, price=f) is not None
     assert (float(5000) == listing.price) is True
 
     # Test multiple
+
+    # Test update all three
     assert update_listing(listing, title="Three together",
                           description="There will be a total of three changes",
                           price=float(6000)) is not None
 
+    # Check if update was implemented
     assert (listing.title == "Three together") is True
     assert (listing.description == "There will be a total of three changes")\
         is True
     assert (listing.price == 6000) is True
 
+    # Test update all three, price fail
     assert update_listing(listing, title="Three together",
                           description="There will be a total of three changes",
                           price=float(500)) is None
 
 
 def test_r5_2_update_listing():
+    '''
+    Testing R5-2: Price can be only increased but cannot be decreased :)
+    '''
     listing = Listing.query.filter_by().first()
 
+    # Check price decrease
     assert update_listing(listing, price=float(20)) is None
     assert (listing.price == 20) is False
+
+    # Check price decrease
     assert update_listing(listing, price=float(6200)) is not None
     assert (listing.price == 6200) is True
 
 
 def test_r5_3_update_listing():
+    '''
+    Testing R5-3: last_modified_date should be updated when 
+    the update operation is successful.
+    '''
     listing = Listing.query.filter_by().first()
 
+    # Check modified date
     update_listing(listing, title=str("title2"))
     assert (listing.last_modified_date == date.today()) is True
 
 
 def test_r5_4_update_listing():
+    '''
+    Testing R5-4: When updating an attribute, 
+    one has to make sure that it follows the same requirements as above.
+    '''
     listing = Listing.query.filter_by().first()
 
     # Title not alphanumeric
@@ -200,6 +230,8 @@ def test_r5_4_update_listing():
 
     listing2 = Listing.query.filter_by(title="The Title62").first()
 
+    # Same title case
     assert update_listing(listing2, title="SAMETITLE") is None
 
+    # Different title case
     assert update_listing(listing2, title="Thishere") is not None
