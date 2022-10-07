@@ -218,7 +218,7 @@ def test_r4_7_create_listing():
     users = User.query.all()
     testid = 0
     found_flag = False
-    while found_flag:
+    while not found_flag:
         for user in users:
             if user.id != testid:
                 found_flag = True
