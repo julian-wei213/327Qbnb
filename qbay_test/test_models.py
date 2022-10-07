@@ -1,5 +1,6 @@
 from qbay.models import register, login, create_listing
 from datetime import date
+from qbay.models import User
 
 
 def test_r1_7_user_register():
@@ -193,4 +194,42 @@ def test_r4_6_create_listing():
     # Case 2: last_modified_date = 2025-01-02
     listing = create_listing('Title', 'description of listing',
                              30.00, date(2025, 1, 2), 0)
+    assert listing is None
+
+
+def test_r4_7_create_listing():
+    '''
+    Testing R4-7: owner_email cannot be empty. The owner of the
+      corresponding product must exist in the database.
+    '''    
+    # Case 1: owner is not in database
+    users = User.query.all()
+    testid = 0
+    found_flag = False
+    while found_flag:
+        for user in users:
+            if user.id != testid:
+                found_flag = True
+                break
+        if found_flag: 
+            break
+        testid += 1
+    
+    listing = create_listing('Title', 'description of listing',
+                             30.00, date(2021, 1, 3), testid)
+    assert listing is None
+    
+    # Case 2: owner_email is not empty
+    register('tu0', 'testtu0@test.com', '123456')
+    user = User.query.filter_by(username='tu0').first()
+    
+    listing = create_listing('Title', 'description of listing',
+                             30.00, date(2021, 1, 3), user.id)
+    assert listing is not None
+    
+    # Case 3: owner_email is empty
+    user.email = ''  # Potential Bug? Need to use update_user_profile
+    
+    listing = create_listing('Title', 'description of listing',
+                             30.00, date(2021, 1, 3), user.id)
     assert listing is None
