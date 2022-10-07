@@ -133,3 +133,33 @@ def test_r4_4_create_listing():
     listing = create_listing('x' * 23, 'x' * 21,
                              30.00, date(2022, 10, 6), 0)
     assert listing is None
+
+
+def test_r4_5_create_listing():
+    '''
+    Testing R4-5: Price has to be of range [10, 10000].
+    '''
+    # Case 1: Price = 10
+    listing = create_listing('Title', 'description of listing',
+                             10, date(2022, 10, 6), 0)
+    assert listing is not None
+    
+    # Case 2: Price = 10000
+    listing = create_listing('Title', 'description of listing',
+                             10000, date(2022, 10, 6), 0)
+    assert listing is not None
+    
+    # Case 3: Price = 50
+    listing = create_listing('Title', 'description of listing',
+                             50, date(2022, 10, 6), 0)
+    assert listing is None
+    
+    # Case 4: Price = 9.99
+    listing = create_listing('Title', 'description of listing',
+                             9.99, date(2022, 10, 6), 0)
+    assert listing is None
+    
+    # Case 5: Price = 10000.01
+    listing = create_listing('Title', 'description of listing',
+                             10000.01, date(2022, 10, 6), 0)
+    assert listing is None
