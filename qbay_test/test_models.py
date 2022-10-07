@@ -73,3 +73,29 @@ def test_r4_2_create_listing():
     # Case 3: Title of 81 characters
     listing = create_listing('x' * 81, 'description of listing', 30.00, date(2022, 10, 6), 0)
     assert listing is None
+
+
+def test_r4_3_create_listing():
+    '''
+    Testing R4-3: The description of the product can be arbitrary characters, with
+      a minimum length of 20 characters and a maximum of 2000 characters.
+    '''
+    # Case 1: Description of 20 characters
+    listing = create_listing('Title', 'x' * 20, 30.00, date(2022, 10, 6), 0)
+    assert listing is not None
+    
+    # Case 2: Description of 2000 characters
+    listing = create_listing('Title', 'x' * 2000, 30.00, date(2022, 10, 6), 0)
+    assert listing is not None
+    
+    # Case 3: Description of 19 characters
+    listing = create_listing('Title', 'x' * 19, 30.00, date(2022, 10, 6), 0)
+    assert listing is None
+    
+    # Case 4: Description of 2001 characters
+    listing = create_listing('Title', 'x' * 2001, 30.00, date(2022, 10, 6), 0)
+    assert listing is None
+    
+    # Case 5: Description of arbitrary characters
+    listing = create_listing('Title', '  abc ABC 123 !@#  _~["', 30.00, date(2022, 10, 6), 0)
+    assert listing is None
