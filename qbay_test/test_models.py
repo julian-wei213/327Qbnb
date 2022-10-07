@@ -152,7 +152,7 @@ def test_r4_5_create_listing():
     # Case 3: Price = 50
     listing = create_listing('Title', 'description of listing',
                              50, date(2022, 10, 6), 0)
-    assert listing is None
+    assert listing is not None
     
     # Case 4: Price = 9.99
     listing = create_listing('Title', 'description of listing',
