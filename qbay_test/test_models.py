@@ -56,3 +56,20 @@ def test_r4_1_create_listing():
     # Case 6: Title with Underscore
     listing = create_listing('The Tit_le', 'description of listing', 30.00, date(2022, 10, 6), 0)
     assert listing is None
+
+
+def test_r4_2_create_listing():
+    '''
+    Testing R4-2: The title of the product is no longer than 80 characters.
+    '''
+    # Case 1: Title of 1 character
+    listing = create_listing('A', 'description of listing', 30.00, date(2022, 10, 6), 0)
+    assert listing is not None
+    
+    # Case 2: Title of 80 characters
+    listing = create_listing('x' * 80, 'description of listing', 30.00, date(2022, 10, 6), 0)
+    assert listing is not None
+    
+    # Case 3: Title of 81 characters
+    listing = create_listing('x' * 81, 'description of listing', 30.00, date(2022, 10, 6), 0)
+    assert listing is None
