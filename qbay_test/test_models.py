@@ -91,27 +91,27 @@ def test_r4_3_create_listing():
       with a minimum length of 20 characters and a maximum of 2000 characters.
     '''
     # Case 1: Description of 20 characters
-    listing = create_listing('Title', 'x' * 20,
+    listing = create_listing('Title1', 'x' * 20,
                              30.00, date(2022, 10, 6), 0)
     assert listing is not None
     
     # Case 2: Description of 2000 characters
-    listing = create_listing('Title', 'x' * 2000,
+    listing = create_listing('Title2', 'x' * 2000,
                              30.00, date(2022, 10, 6), 0)
     assert listing is not None
     
     # Case 3: Description of 19 characters
-    listing = create_listing('Title', 'x' * 19,
+    listing = create_listing('Title3', 'x' * 19,
                              30.00, date(2022, 10, 6), 0)
     assert listing is None
     
     # Case 4: Description of 2001 characters
-    listing = create_listing('Title', 'x' * 2001,
+    listing = create_listing('Title4', 'x' * 2001,
                              30.00, date(2022, 10, 6), 0)
     assert listing is None
     
     # Case 5: Description of arbitrary characters
-    listing = create_listing('Title', '  abc ABC 123 !@#  _~["',
+    listing = create_listing('Title5', '  abc ABC 123 !@#  _~["',
                              30.00, date(2022, 10, 6), 0)
     assert listing is None
 
@@ -126,12 +126,12 @@ def test_r4_4_create_listing():
     assert listing is not None
     
     # Case 2: Description length equal to title length
-    listing = create_listing('x' * 23, 'x' * 23,
+    listing = create_listing('y' * 23, 'x' * 23,
                              30.00, date(2022, 10, 6), 0)
     assert listing is None
     
     # Case 3: Description shorter than title
-    listing = create_listing('x' * 23, 'x' * 21,
+    listing = create_listing('z' * 23, 'x' * 21,
                              30.00, date(2022, 10, 6), 0)
     assert listing is None
 
@@ -141,27 +141,27 @@ def test_r4_5_create_listing():
     Testing R4-5: Price has to be of range [10, 10000].
     '''
     # Case 1: Price = 10
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title1', 'description of listing',
                              10, date(2022, 10, 6), 0)
     assert listing is not None
     
     # Case 2: Price = 10000
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title2', 'description of listing',
                              10000, date(2022, 10, 6), 0)
     assert listing is not None
     
     # Case 3: Price = 50
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title3', 'description of listing',
                              50, date(2022, 10, 6), 0)
     assert listing is not None
     
     # Case 4: Price = 9.99
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title4', 'description of listing',
                              9.99, date(2022, 10, 6), 0)
     assert listing is None
     
     # Case 5: Price = 10000.01
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title5', 'description of listing',
                              10000.01, date(2022, 10, 6), 0)
     assert listing is None
 
@@ -172,27 +172,27 @@ def test_r4_6_create_listing():
       and before 2025-01-02.
     '''
     # Case 1: last_modified_date = 2021-01-03
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title1', 'description of listing',
                              30.00, date(2021, 1, 3), 0)
     assert listing is not None
     
     # Case 2: last_modified_date = 2025-01-01
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title2', 'description of listing',
                              30.00, date(2025, 1, 1), 0)
     assert listing is not None
     
     # Case 2: last_modified_date = 2023-01-01
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title3', 'description of listing',
                              30.00, date(2023, 1, 1), 0)
     assert listing is not None
     
     # Case 2: last_modified_date = 2021-01-02
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title4', 'description of listing',
                              30.00, date(2021, 1, 2), 0)
     assert listing is None
     
     # Case 2: last_modified_date = 2025-01-02
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title5', 'description of listing',
                              30.00, date(2025, 1, 2), 0)
     assert listing is None
 
@@ -215,7 +215,7 @@ def test_r4_7_create_listing():
             break
         testid += 1
     
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title1', 'description of listing',
                              30.00, date(2021, 1, 3), testid)
     assert listing is None
     
@@ -223,13 +223,30 @@ def test_r4_7_create_listing():
     register('tu0', 'testtu0@test.com', '123456')
     user = User.query.filter_by(username='tu0').first()
     
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title2', 'description of listing',
                              30.00, date(2021, 1, 3), user.id)
     assert listing is not None
     
     # Case 3: owner_email is empty
     user.email = ''  # Potential Bug? Need to use update_user_profile
     
-    listing = create_listing('Title', 'description of listing',
+    listing = create_listing('Title3', 'description of listing',
                              30.00, date(2021, 1, 3), user.id)
     assert listing is None
+
+
+def test_r4_8_create_listing():
+    '''
+    Testing R4-8: A user cannot create products that have the same title.
+    '''    
+    # Case 1: Same Title
+    listing = create_listing('Title1', 'description of listing',
+                             30.00, date(2021, 1, 3), 0)
+    listing = create_listing('Title1', 'description of listing',
+                             30.00, date(2021, 1, 3), 0)
+    assert listing is None
+    
+    # Case 2: Different Title
+    listing = create_listing('Title2', 'description of listing',
+                             30.00, date(2021, 1, 3), 0)
+    assert listing is not None
