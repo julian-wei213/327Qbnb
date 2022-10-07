@@ -193,17 +193,17 @@ def test_r4_6_create_listing():
                              30.00, date(2025, 1, 1), user.id)
     assert listing is not None
     
-    # Case 2: last_modified_date = 2023-01-01
+    # Case 3: last_modified_date = 2023-01-01
     listing = create_listing('Title23', 'description of listing',
                              30.00, date(2023, 1, 1), user.id)
     assert listing is not None
     
-    # Case 2: last_modified_date = 2021-01-02
+    # Case 4: last_modified_date = 2021-01-02
     listing = create_listing('Title24', 'description of listing',
                              30.00, date(2021, 1, 2), user.id)
     assert listing is None
     
-    # Case 2: last_modified_date = 2025-01-02
+    # Case 5: last_modified_date = 2025-01-02
     listing = create_listing('Title25', 'description of listing',
                              30.00, date(2025, 1, 2), user.id)
     assert listing is None

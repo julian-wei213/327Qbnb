@@ -102,11 +102,11 @@ def create_listing(title: str, description: str, price: float,
     '''
     Creates a listing
       Attributes:
-        title (str):            listing title
-        description (str):      listing description
-        price (float):           listing price
+        title (str):               listing title
+        description (str):         listing description
+        price (float):             listing price
         last_modified_date (date): last modified date of listing
-        owner_id (int):        listing owner's id
+        owner_id (int):            listing owner's id
       Returns:
         The listing object if succeeded otherwise None
     '''
