@@ -29,7 +29,10 @@ def test_r2_1_login():
 
 
 def test_r4_1_create_listing():
-    
+    '''
+    Testing R4-1: The title of the product has to be alphanumeric-only, and
+      space allowed only if it is not as prefix and suffix.
+    '''
     # Case 1: Empty Title
     listing = create_listing('', 'description of listing', 30.00, date(2022, 10, 6), 0)
     assert listing is None
@@ -53,4 +56,3 @@ def test_r4_1_create_listing():
     # Case 6: Title with Underscore
     listing = create_listing('The Tit_le', 'description of listing', 30.00, date(2022, 10, 6), 0)
     assert listing is None
-    
