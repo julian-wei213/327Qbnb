@@ -1,4 +1,5 @@
-from qbay.models import register, login
+from qbay.models import register, login, create_listing
+from datetime import date
 
 
 def test_r1_7_user_register():
@@ -25,3 +26,31 @@ def test_r2_1_login():
 
     user = login('test0@test.com', 1234567)
     assert user is None
+
+
+def test_r4_1_create_listing():
+    
+    # Case 1: Empty Title
+    listing = create_listing('', 'description of listing', 30.00, date(2022, 10, 6), 0)
+    assert listing is None
+    
+    # Case 2: Regular Title
+    listing = create_listing('The Title', 'description of listing', 30.00, date(2022, 10, 6), 0)
+    assert listing is not None
+    
+    # Case 3: Regular Title with Numbers
+    listing = create_listing('The Title62', 'description of listing', 30.00, date(2022, 10, 6), 0)
+    assert listing is not None
+    
+    # Case 4: Title with Space as Prefix
+    listing = create_listing(' The Title62', 'description of listing', 30.00, date(2022, 10, 6), 0)
+    assert listing is None
+    
+    # Case 5: Title with Space as Suffix
+    listing = create_listing('The Title62 ', 'description of listing', 30.00, date(2022, 10, 6), 0)
+    assert listing is not None
+    
+    # Case 6: Title with Underscore
+    listing = create_listing('The Tit_le', 'description of listing', 30.00, date(2022, 10, 6), 0)
+    assert listing is None
+    
