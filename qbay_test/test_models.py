@@ -163,3 +163,34 @@ def test_r4_5_create_listing():
     listing = create_listing('Title', 'description of listing',
                              10000.01, date(2022, 10, 6), 0)
     assert listing is None
+
+
+def test_r4_6_create_listing():
+    '''
+    Testing R4-6: last_modified_date must be after 2021-01-02
+      and before 2025-01-02.
+    '''
+    # Case 1: last_modified_date = 2021-01-03
+    listing = create_listing('Title', 'description of listing',
+                             30.00, date(2021, 1, 3), 0)
+    assert listing is not None
+    
+    # Case 2: last_modified_date = 2025-01-01
+    listing = create_listing('Title', 'description of listing',
+                             30.00, date(2025, 1, 1), 0)
+    assert listing is not None
+    
+    # Case 2: last_modified_date = 2023-01-01
+    listing = create_listing('Title', 'description of listing',
+                             30.00, date(2023, 1, 1), 0)
+    assert listing is not None
+    
+    # Case 2: last_modified_date = 2021-01-02
+    listing = create_listing('Title', 'description of listing',
+                             30.00, date(2021, 1, 2), 0)
+    assert listing is None
+    
+    # Case 2: last_modified_date = 2025-01-02
+    listing = create_listing('Title', 'description of listing',
+                             30.00, date(2025, 1, 2), 0)
+    assert listing is None
