@@ -99,4 +99,68 @@ def login(email, password):
 
 def create_listing(title: str, description: str, price: float,
                    last_modified_date: date, owner_id: int):
-    return None
+    '''
+    Creates a listing
+      Attributes:
+        title (str):            listing title
+        description (str):      listing description
+        price (float):           listing price
+        last_modified_date (date): last modified date of listing
+        owner_id (int):        listing owner's id
+      Returns:
+        The listing object if succeeded otherwise None
+    '''
+    # Satisfy R4-1
+    if title == '':
+        return None
+    
+    if title[0] == ' ' or title[-1] == ' ':
+        return None
+    
+    if not title.replace(' ', '').isalnum():
+        return None
+
+    # Satisfy R4-2
+    if len(title) > 80:
+        return None
+    
+    # Satisfy R4-3
+    if len(description) < 20 or len(description) > 2000:
+        return None
+    
+    # Satisfy R4-4
+    if len(description) <= len(title):
+        return None
+    
+    # Satisfy R4-5
+    if price < 10 or price > 10000:
+        return None
+    
+    # Satisfy R4-6
+    if last_modified_date <= date(2021, 1, 2) or \
+       last_modified_date >= date(2025, 1, 2):
+        return None
+    
+    # Satisfy R4-7
+    user = User.query.filter_by(id=owner_id).first()
+    if user is None:
+        return None
+    
+    if user.email == '':
+        return None
+    
+    # Satisfy R4-8
+    if len(Listing.query.filter_by(title=title).all()) > 0:
+        return None
+    
+    # create a new listing
+    listing = Listing(title=title, description=description,
+                      price=price, last_modified_date=last_modified_date,
+                      owner_id=owner_id)
+    
+    # add it to the current database session
+    db.session.add(listing)
+    # actually save the user object
+    db.session.commit()
+
+    return listing
