@@ -94,3 +94,7 @@ def login(email, password):
     if len(valids) != 1:
         return None
     return valids[0]
+
+
+def create_listing(title: str, description, price, last_modified_date, owner_id):
+    return None
