@@ -97,5 +97,6 @@ def login(email, password):
     return valids[0]
 
 
-def create_listing(title: str, description: str, price: float, last_modified_date: date, owner_id: int):
+def create_listing(title: str, description: str, price: float,
+                   last_modified_date: date, owner_id: int):
     return None
