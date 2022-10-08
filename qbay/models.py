@@ -61,6 +61,7 @@ def register(name, email, password):
     # R1-4 Password has to meet the required complexity
 
 
+
     # R1-5 Username has to be non-empty
     if name == '':
         return None
@@ -87,7 +88,7 @@ def register(name, email, password):
     # R1-9 Postal code is empty at the time of registration
     # Initialize User with postal_code as ''
 
-    # R1-10 Balance should be init as 100
+    # R1-10 Balance should be initialized as 100
     balance = 100
 
     # create a new user
