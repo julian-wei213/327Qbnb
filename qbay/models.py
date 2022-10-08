@@ -28,7 +28,7 @@ class User(db.Model):
         db.Float, nullable=False, default=0)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<ID %r>' % self.id
 
 
 # create all tables
@@ -50,10 +50,8 @@ def register(name, email, password):
     if len(email) <= 0:
         return None
 
-    # R1-2 check if the user id uniquely identified by their id
-    # id_unique = User.query.filter_by(id=id).all()
-    # if len(id_unique) > 0:
-    #     return None
+    # R1-2 each user is identified by a unique id
+    # User.id is a primary_key and automatically generates a new unique id for each new User
 
     # R1-3 The email has to follow addr-spec defined in RFC 5322
     email_val = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(.[A-Z|a-z]{2,})+')
@@ -66,6 +64,7 @@ def register(name, email, password):
     # R1-5 Username has to be non-empty
     if name == '':
         return None
+
     # R1-5 Alpahnumerical, and space allowed only as not prefix/suffix
     name_val = re.compile('^(?! )[A-Za-z0-9 ]*(?<! )$')
     if not re.fullmatch(name_val, name):
@@ -93,6 +92,7 @@ def register(name, email, password):
 
     # create a new user
     user = User(username=name, email=email, password=password, ship_addr='', postal_code='', balance=100)
+
     # add it to the current database session
     db.session.add(user)
     # actually save the user object

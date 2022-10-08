@@ -11,11 +11,12 @@ def test_r1_2_user_register():
     '''
     Testing R1-2: A user is uniquely identified by their id
     '''
-    # user1 = register('user3', '1@email.com', 123456)
-    # assert user1 is not None
-    # user2 = register('user3', '1@email.com', 123456)
-    # assert
 
+    user1 = register('user3' , '3@email.com',  123456)
+    assert user1 is not None
+    user2 = register('user4' , '4@email.com',  123456)
+    assert user2 is not None
+    assert user1.id != user2.id 
 
 
 def test_r1_3_user_register():
