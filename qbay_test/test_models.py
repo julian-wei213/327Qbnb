@@ -1,5 +1,5 @@
 from sre_parse import SPECIAL_CHARS
-from qbay.models import register, login
+from qbay.models import register, login, check_str_contains_lower, check_str_contains_upper, check_str_contains_special
 import string
 import random
 
@@ -22,10 +22,13 @@ def test_r1_4_user_register():
     for i in range(100):
       string_length = random.randint(4, 10)
       test_string = generate_string(string_length)
-      if (check_str_contains_lower(test_string) and check_str_contains_upper(test_string) and check_str_contains_special(test_string)):
-        assert register('u0', 'test0@test.com', test_string) is True
+
+      if (len(test_string) >= 6 and check_str_contains_lower(test_string) and check_str_contains_upper(test_string) and check_str_contains_special(test_string)):
+        assert register('u_r1_4{i}', 'r1_4_%i@test.com'%(i), test_string) is True
       else:
-        assert register('u0', 'test0@test.com', test_string) is False
+        assert register('u_r1_4{i}', 'r1_4_%i@test.com'%(i), test_string) is False
+
+
 
 def generate_string(string_length):
     generated = ""
@@ -35,24 +38,10 @@ def generate_string(string_length):
       rng = random.randint(0, 10)
       # 10% of the time, pick a special character instead
       if rng >= 9:
-        letters = string.punctuation
-      generated.join(random.choice(letters))
-    return 
+        letters = SPECIAL_CHARS
+      generated += (random.choice(letters))
+    return generated
 
-def check_str_contains_upper(str):
-    for x in str:
-        if x == x.upper():
-            return True
-    return False
-
-def check_str_contains_lower(str):
-    for x in str:
-        if x == x.lower():
-            return True
-    return False
-
-def check_str_contains_special(str):
-    return any(special in str for special in string.punctuation)
 
 def test_r1_7_user_register():
     '''
@@ -95,7 +84,7 @@ def test_r3_1_update_user():
 
 def test_r3_2_update_user():
     '''
-      Testing R3-2: postal code should be non-empty, alphanumeric-only, and no special characters such as !.
+      Testing R3-2: Postal code should be non-empty, alphanumeric-only, and no special characters such as !.
     '''
 
 

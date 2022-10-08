@@ -1,3 +1,5 @@
+from queue import Empty
+from sre_parse import SPECIAL_CHARS
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
 
@@ -37,9 +39,15 @@ def register(name, email, password):
       Returns:
         True if registration succeeded otherwise False
     '''
+    # check if email or password are empty
+    if not email or not password:
+        return False
     # check if the email has been used:
     existed = User.query.filter_by(email=email).all()
     if len(existed) > 0:
+        return False
+    # check if password is at least 6 characters, with upper, lower and special characters
+    if not (len(password) >= 6 and check_str_contains_lower(password) and check_str_contains_upper(password) and check_str_contains_special(password)):
         return False
 
     # create a new user
@@ -51,6 +59,20 @@ def register(name, email, password):
 
     return True
 
+def check_str_contains_upper(str):
+    for x in str:
+        if x == x.upper():
+            return True
+    return False
+
+def check_str_contains_lower(str):
+    for x in str:
+        if x == x.lower():
+            return True
+    return False
+
+def check_str_contains_special(str):
+    return any(special in str for special in SPECIAL_CHARS)
 
 def login(email, password):
     '''
