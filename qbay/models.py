@@ -67,8 +67,8 @@ def register(name, email, password):
         return None
 
     # R1-5 Alpahnumerical, and space allowed only as not prefix/suffix
-    name_val = re.compile('^(?! )[A-Za-z0-9 ]*(?<! )$')
-    if not re.fullmatch(name_val, name):
+    name_validation = re.compile('^(?! )[A-Za-z0-9 ]*(?<! )$')
+    if not re.fullmatch(name_validation, name):
         return None
 
     # R1-6 Username has to be longer than 2 but shorter than 20
@@ -78,8 +78,8 @@ def register(name, email, password):
         return None
 
     # R1-7 check if the email has been used:
-    existed = User.query.filter_by(email=email).all()
-    if len(existed) > 0:
+    existing_email = User.query.filter_by(email=email).all()
+    if len(existing_email) > 0:
         return None
 
     # R1-8 Shipping Adress is empty at the time of registration
@@ -92,7 +92,7 @@ def register(name, email, password):
     balance = 100
 
     # create a new user
-    user = User(username=name, email=email, password=password, ship_addr='', postal_code='', balance=100)
+    user = User(username=name, email=email, password=password, ship_addr='', postal_code='', balance=balance)
 
     # add it to the current database session
     db.session.add(user)
