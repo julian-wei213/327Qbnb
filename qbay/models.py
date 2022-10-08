@@ -1,3 +1,5 @@
+import re
+import random
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,13 +13,19 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(
         db.String(80), nullable=False)
     email = db.Column(
-        db.String(120), unique=True, nullable=False,
-        primary_key=True)
+        db.String(120), unique=True, nullable=False)
     password = db.Column(
         db.String(120), nullable=False)
+    ship_addr = db.Column(
+        db.String(120), nullable=False)
+    postal_code = db.Column(
+        db.String(120), nullable=False)
+    balance = db.Column(
+        db.Float, nullable=False, default=0)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -37,19 +45,60 @@ def register(name, email, password):
       Returns:
         True if registration succeeded otherwise False
     '''
-    # check if the email has been used:
+
+    # R1-1 check if the email is empty
+    if len(email) <= 0:
+        return None
+
+    # R1-2 check if the user id uniquely identified by their id
+    # id_unique = User.query.filter_by(id=id).all()
+    # if len(id_unique) > 0:
+    #     return None
+
+    # R1-3 The email has to follow addr-spec defined in RFC 5322
+    email_val = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(.[A-Z|a-z]{2,})+')
+    if not re.fullmatch(email_val, email):
+        return None
+
+    # R1-4 Password has to meet the required complexity
+
+
+    # R1-5 Username has to be non-empty
+    if name == '':
+        return None
+    # R1-5 Alpahnumerical, and space allowed only as not prefix/suffix
+    name_val = re.compile('^(?! )[A-Za-z0-9 ]*(?<! )$')
+    if not re.fullmatch(name_val, name):
+        return None
+
+    # R1-6 Username has to be longer than 2 but shorter than 20
+    if len(name) < 3:
+        return None
+    elif len(name) > 19:
+        return None
+
+    # R1-7 check if the email has been used:
     existed = User.query.filter_by(email=email).all()
     if len(existed) > 0:
-        return False
+        return None
+
+    # R1-8 Shipping Adress is empty at the time of registration
+    # Initialize User with ship_addr as ''
+
+    # R1-9 Postal code is empty at the time of registration
+    # Initialize User with postal_code as ''
+
+    # R1-10 Balance should be init as 100
+    balance = 100
 
     # create a new user
-    user = User(username=name, email=email, password=password)
+    user = User(username=name, email=email, password=password, ship_addr='', postal_code='', balance=100)
     # add it to the current database session
     db.session.add(user)
     # actually save the user object
     db.session.commit()
 
-    return True
+    return user
 
 
 def login(email, password):
