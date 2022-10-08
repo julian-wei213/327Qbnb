@@ -43,7 +43,7 @@ def register(name, email, password):
         email (string):    user email
         password (string): user password
       Returns:
-        True if registration succeeded otherwise False
+        The object User otherwise None
     '''
 
     # R1-1 check if the email is empty
