@@ -51,16 +51,16 @@ def register(name, email, password):
         return None
 
     # R1-2 each user is identified by a unique id
-    # User.id is a primary_key and automatically generates a new unique id for each new User
+    # User.id is a primary_key and automatically generates a
+    # new unique id for each new User
 
     # R1-3 The email has to follow addr-spec defined in RFC 5322
-    email_val = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(.[A-Z|a-z]{2,})+')
+    email_val = re.compile(
+        r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(.[A-Z|a-z]{2,})+')
     if not re.fullmatch(email_val, email):
         return None
 
     # R1-4 Password has to meet the required complexity
-
-
 
     # R1-5 Username has to be non-empty
     if name == '':
@@ -92,7 +92,8 @@ def register(name, email, password):
     balance = 100
 
     # create a new user
-    user = User(username=name, email=email, password=password, ship_addr='', postal_code='', balance=balance)
+    user = User(username=name, email=email, password=password,
+                ship_addr='', postal_code='', balance=balance)
 
     # add it to the current database session
     db.session.add(user)

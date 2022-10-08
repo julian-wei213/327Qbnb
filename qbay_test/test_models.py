@@ -1,5 +1,6 @@
 from qbay.models import register, login
 
+
 def test_r1_1_user_register():
     '''
     Testing R1-1: Email/Password cannot be empty
@@ -15,9 +16,9 @@ def test_r1_2_user_register():
     Testing R1-2: A user is uniquely identified by their id
     '''
     # First assess that two new users are valid
-    user1 = register('user3' , '3@email.com',  123456)
+    user1 = register('user3', '3@email.com', 123456)
     assert user1 is not None
-    user2 = register('user4' , '4@email.com',  123456)
+    user2 = register('user4', '4@email.com', 123456)
     assert user2 is not None
     # Second make sure their id's are unique
     assert user1.id != user2.id
@@ -48,7 +49,8 @@ def test_r1_4_user_register():
 
 def test_r1_5_user_register():
     '''
-    Testing R1-5: Username has to be non-empty, alpahnumerical, and space allowed only as prefix/suffix
+    Testing R1-5: Username has to be non-empty, alpahnumerical,
+    and space allowed only as prefix/suffix
     '''
     # First assess that a username is valid based on the constraints
     assert register('u U0', 'anemail1@gmail.com', 123456) is not None
@@ -64,21 +66,25 @@ def test_r1_6_user_register():
     '''
     # First assess that the username is valid if within the constraint
     assert register('use', 'anemail6@gmail.com', 123456) is not None
-    assert register('uabcdefghijklmnop12', 'anemail8@gmail.com', 123456) is not None
+    assert register(
+        'uabcdefghijklmnop12', 'anemail8@gmail.com', 123456) is not None
     # Second assess that username is not valid if outside of constraint
     assert register('u', 'anemail5@gmail.com', 123456) is None
     assert register('us', 'anemail6@gmail.com', 123456) is None
-    assert register('uabcdefghijklmnop123', 'anemail7@gmail.com', 123456) is None
+    assert register(
+        'uabcdefghijklmnop123', 'anemail7@gmail.com', 123456) is None
 
 
 def test_r1_7_user_register():
     '''
     Testing R1-7: If the email has been used, the operation failed.
     '''
-    # First create two usernames with two different emails and that the operation is valid
+    # First create two usernames with two
+    # different emails and that the operation is valid
     assert register('us0', 'test0@test.com', '123456') is not None
     assert register('us0', 'test1@test.com', '123456') is not None
-    # Second attempt to make a new user with an already used email and ensure its not valid
+    # Second attempt to make a new user with an already
+    # used email and ensure its not valid
     assert register('us1', 'test0@test.com', '123456') is None
 
 
