@@ -1,5 +1,5 @@
 from sre_parse import SPECIAL_CHARS
-from qbay.models import register, login, check_str_contains_lower, check_str_contains_upper, check_str_contains_special
+from qbay.models import *
 import string
 import random
 
@@ -80,18 +80,43 @@ def test_r3_1_update_user():
     '''
       Testing R3-1: A user is only able to update his/her user name, user email, billing address, and postal code.
     '''
+    user = login('test0@test.com', 123456)
+    old_name = user.username
+    old_email = user.email
+    old_address = user.address
+    old_postal_code = user.postal_code
+    new_name = "new " + user.username
+    new_email = "new" + user.email
+    new_address = "new" + user.address
+    new_postal_code = "new" + user.postal_code
+    update_user(new_name, new_email, new_address, new_postal_code)
+    assert user.username == new_name
+    assert user.email == new_email
+    assert user.address == new_address
+    assert user.postal_code == new_postal_code
+    
 
 
 def test_r3_2_update_user():
     '''
       Testing R3-2: Postal code should be non-empty, alphanumeric-only, and no special characters such as !.
     '''
+    for i in range(100):
+      string_length = random.randint(0, 10)
+      test_string = generate_string(string_length)
 
+      if (test_string and not check_str_contains_special(test_string)):
+        assert update_user("name", "email", "address", test_string) is True
+      else:
+        assert update_user("name", "email", "address", test_string) is False
+    
 
 def test_r3_3_update_user():
     '''
       Testing R3-3: Postal code has to be a valid Canadian postal code.
+      Follow style: A1A 1A1
     '''
+    
 
 
 def test_r3_4_update_user():

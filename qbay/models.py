@@ -87,3 +87,8 @@ def login(email, password):
     if len(valids) != 1:
         return None
     return valids[0]
+
+def update_user(name, email, address, postal_code):
+    '''
+    A user is able to update his/her user name, user email, billing address, and postal code.
+    '''
