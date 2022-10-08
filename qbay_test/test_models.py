@@ -36,7 +36,7 @@ def generate_string(string_length):
       # 10% of the time, pick a special character instead
       if rng >= 9:
         letters = string.punctuation
-      generate_string.join(random.choice(letters))
+      generated.join(random.choice(letters))
     return 
 
 def check_str_contains_upper(str):
