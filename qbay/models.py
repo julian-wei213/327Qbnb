@@ -116,34 +116,6 @@ class Listing(db.Model):
         return '<Listing %r>' % self.title
 
 
-class Listing(db.Model):
-    '''
-    Listing model
-      Attributes:
-        id (Integer):              listing id
-        title (String):            listing title
-        description (String):      listing description
-        price (Decimal):           listing price
-        last_modified_date (Date): last modified date of listing
-        owner_id (Integer):        listing owner's id
-    '''
-    id = db.Column(
-        db.Integer, primary_key=True)
-    title = db.Column(
-        db.String(80), unique=True, nullable=False)
-    description = db.Column(
-        db.String(2000), nullable=False)
-    price = db.Column(
-        db.Float(2, True), nullable=False)
-    last_modified_date = db.Column(
-        db.Date)
-    owner_id = db.Column(
-        db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    def __repr__(self):
-        return '<Listing %r>' % self.title
-
-
 # create all tables
 db.create_all()
 
