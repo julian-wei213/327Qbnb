@@ -1,5 +1,5 @@
 from sre_parse import SPECIAL_CHARS
-from qbay.models import register, login, check_str_contains_lower, check_str_contains_upper, check_str_contains_special
+from qbay.models import *
 import string
 import random
 
@@ -125,3 +125,15 @@ def test_r3_4_update_user():
     '''
       Testing R3-4: User name follows the requirements above.
     '''
+    # User name has to be non-empty
+    assert user_update_name("") is False
+    # alphanumeric-only
+    assert user_update_name("asd#f12!3") is False
+    # space allowed only if it is not as the prefix or suffix.
+    assert user_update_name(" asdf123") is False
+    assert user_update_name("asdf123 ") is False
+    # longer than 2 characters and less than 20 characters.
+    assert user_update_name("1") is False
+    assert user_update_name("12") is True
+    assert user_update_name('' + ("a") for i in range(20)) is False
+    assert user_update_name('' + ("a") for i in range(19)) is True
