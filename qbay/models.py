@@ -1,6 +1,7 @@
 import re
 from queue import Empty
-from sre_parse import SPECIAL_CHARS
+import string
+from tokenize import String
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
 
@@ -36,7 +37,7 @@ class User(db.Model):
 db.create_all()
 
 
-def register(name, email, password):
+def register(name: str, email: str, password: str):
     '''
     Register a new user
       Parameters:
@@ -46,10 +47,13 @@ def register(name, email, password):
       Returns:
         The object User otherwise None
     '''
-
+    
     # R1-1 check if the email or password are empty
     if not email or not password:
         return None
+
+    # ensure password is a string
+    password = str(password)
 
     # R1-2 each user is identified by a unique id
     # User.id is a primary_key and automatically generates a
@@ -64,7 +68,7 @@ def register(name, email, password):
     # R1-4 Password has to meet the required complexity
     # check if password is at least 6 characters, with upper, lower and special characters
     if not (len(password) >= 6 and check_str_contains_lower(password) and check_str_contains_upper(password) and check_str_contains_special(password)):
-        return False
+        return None
 
     # R1-5 Username has to be non-empty
     if name == '':
@@ -95,11 +99,6 @@ def register(name, email, password):
     # R1-10 Balance should be initialized as 100
     # Default is set to 100 in the User class
 
-    # check if the email has been used:
-    existed = User.query.filter_by(email=email).all()
-    if len(existed) > 0:
-        return False
-
     # create a new user
     user = User(username=name, email=email, password=password)
 
@@ -123,7 +122,7 @@ def check_str_contains_lower(str):
     return False
 
 def check_str_contains_special(str):
-    return any(special in str for special in SPECIAL_CHARS)
+    return any(special in str for special in string.punctuation)
 
 def login(email, password):
     '''
