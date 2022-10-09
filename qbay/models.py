@@ -24,6 +24,26 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+    def update_name(name):
+        '''
+        A user is able to update his/her user name.
+        '''
+
+    def update_email(email):
+        '''
+        A user is able to update his/her user email.
+        '''
+
+    def update_address(address):
+        '''
+        A user is able to update his/her billing address.
+        '''
+
+    def update_postal_code(postal_code):
+        '''
+        A user is able to update his/her postal code.
+        '''
+
 
 # create all tables
 db.create_all()
@@ -59,11 +79,13 @@ def register(name, email, password):
 
     return True
 
+
 def check_str_contains_upper(str):
     for x in str:
         if x == x.upper():
             return True
     return False
+
 
 def check_str_contains_lower(str):
     for x in str:
@@ -71,8 +93,10 @@ def check_str_contains_lower(str):
             return True
     return False
 
+
 def check_str_contains_special(str):
     return any(special in str for special in SPECIAL_CHARS)
+
 
 def login(email, password):
     '''
@@ -89,67 +113,45 @@ def login(email, password):
     return valids[0]
 
 
-def user_update_name(name):
-    '''
-    A user is able to update his/her user name.
-    '''
-
-def user_update_email(email):
-    '''
-    A user is able to update his/her user email.
-    '''
-
-def user_update_address(address):
-    '''
-    A user is able to update his/her billing address.
-    '''
-
-def user_update_postal_code(postal_code):
-    '''
-    A user is able to update his/her postal code.
-    '''
-
-
-
 def is_postal_code(code):
-  '''
-  Returns true if the string 'code' is a valid Canadian postal code, and false 
-  if not.  
+    '''
+    Returns true if the string 'code' is a valid Canadian postal code, and false
+    if not.
 
-  Canadian Postal Code has the format:
-  A1A A1A
-  '''
-  # Check that the string contains exactly 7 characters, otherwise return false 
-  # as the string cannot be a valid postal code.
-  if (len(code) != 7):
-    return False 
-  
-  # Check that the 1st character in the string is a letter, return false if not
-  if (not code[0].isalpha()):
-    return False 
+    Canadian Postal Code has the format:
+    A1A A1A
+    '''
+    # Check that the string contains exactly 7 characters, otherwise return false
+    # as the string cannot be a valid postal code.
+    if (len(code) != 7):
+        return False
 
-  # Check that the 2nd character in the string is a digit, return false if not
-  if (not code[1] in "0123456789"):
-    return False
+    # Check that the 1st character in the string is a letter, return false if not
+    if (not code[0].isalpha()):
+        return False
 
-  # Check that the 3rd character in the string is a letter, return false if not
-  if (not code[2].isalpha()):
-    return False 
+    # Check that the 2nd character in the string is a digit, return false if not
+    if (not code[1] in "0123456789"):
+        return False
 
-  # Check that the 4th character in the string is a space, return false if not
-  if (code[3] != " "):
-    return False 
+    # Check that the 3rd character in the string is a letter, return false if not
+    if (not code[2].isalpha()):
+        return False
 
-  # Check that the 5th character in the string is a digit, return false if not
-  if (not code[4] in "0123456789"):
-    return False
+    # Check that the 4th character in the string is a space, return false if not
+    if (code[3] != " "):
+        return False
 
-  # Check that the 6th character in the string is a letter, return false if not
-  if (not code[5].isalpha()):
-    return False 
+    # Check that the 5th character in the string is a digit, return false if not
+    if (not code[4] in "0123456789"):
+        return False
 
-  # Check that the 7th character in the string is a digit, return false if not
-  if (not code[6] in "0123456789"):
-    return False
-  
-  return True
+    # Check that the 6th character in the string is a letter, return false if not
+    if (not code[5].isalpha()):
+        return False
+
+    # Check that the 7th character in the string is a digit, return false if not
+    if (not code[6] in "0123456789"):
+        return False
+
+    return True
