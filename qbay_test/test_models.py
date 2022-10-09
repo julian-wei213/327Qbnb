@@ -211,7 +211,7 @@ def test_r2_2_login():
                 and check_str_contains_special(test_string)):
             register('ur22%i' % (i), 'r22%i@test.com'
                      % (i), test_string)
-            assert login('r14%i@test.com', test_string) is not None
+            assert login('r22%i@test.com', test_string) is not None
         else:
             register('ur22%i' % (i), 'r22%i@test.com'
                      % (i), test_string)
