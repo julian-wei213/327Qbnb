@@ -684,6 +684,5 @@ def test_r5_4_update_listing():
     # Same title case
     assert update_listing(listing2, title="SAMETITLE") is None
 
-
     # Different title case
     assert update_listing(listing2, title="Thishere") is not None
