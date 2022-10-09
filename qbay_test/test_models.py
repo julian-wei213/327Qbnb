@@ -156,19 +156,4 @@ def test_r1_10_user_register():
     assert user.balance == 100.0
 
 
-def test_r2_1_login():
-    '''
-    Testing R2-1: A user can log in using her/his email address
-      and the password.
-    (will be tested after the previous test, so we already have u0,
-      u1 in database)
-    '''
-    # First assess that a newly made user is valid
-    user = login('test0@test.com', valid_password)
-    assert user is not None
-    # Second assess that the users username is the same as when registered
-    assert user.username == 'us0'
-    # Thirdly ensure that the user cannot log in with an incorrect password
-    user = login('test0@test.com', valid_password)
-    assert user is None
 
