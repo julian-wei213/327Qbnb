@@ -209,10 +209,10 @@ def test_r2_2_login():
         if (len(test_string) >= 6 and check_str_contains_lower(test_string)
             and check_str_contains_upper(test_string)
                 and check_str_contains_special(test_string)):
-            register('ur14%i' % (i), 'r14%i@test.com'
+            register('ur22%i' % (i), 'r22%i@test.com'
                      % (i), test_string)
             assert login('r14%i@test.com', test_string) is not None
         else:
-            register('ur14%i' % (i), 'r14%i@test.com'
+            register('ur22%i' % (i), 'r22%i@test.com'
                      % (i), test_string)
             assert login('r14%i@test.com', test_string) is None
