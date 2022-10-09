@@ -172,36 +172,3 @@ def test_r2_1_login():
     user = login('test0@test.com', valid_password)
     assert user is None
 
-
-def test_r2_2_login():
-    '''
-      Testing R2-2: The login function should check if the supplied inputs
-      meet the same email/password requirements as above, before checking the
-      database.
-    '''
-
-
-def test_r3_1_update_user():
-    '''
-      Testing R3-1: A user is only able to update his/her user name,
-      user email, billing address, and postal code.
-    '''
-
-
-def test_r3_2_update_user():
-    '''
-      Testing R3-2: Postal code should be non-empty, alphanumeric-only,
-      and no special characters such as !.
-    '''
-
-
-def test_r3_3_update_user():
-    '''
-      Testing R3-3: Postal code has to be a valid Canadian postal code.
-    '''
-
-
-def test_r3_4_update_user():
-    '''
-      Testing R3-4: User name follows the requirements above.
-    '''
