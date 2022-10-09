@@ -232,7 +232,7 @@ def test_r4_7_create_listing():
     assert listing is None
     
     # Case 2: owner_email is not empty
-    register('tu0', 'testtu0@test.com', '123456')
+    register('tu0', 'testtu0@test.com', 'Abc#123')
     user = User.query.filter_by(username='tu0').first()
     
     listing = create_listing('Title32', 'description of listing',
