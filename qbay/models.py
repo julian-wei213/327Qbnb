@@ -20,11 +20,11 @@ class User(db.Model):
     password = db.Column(
         db.String(120), nullable=False)
     ship_addr = db.Column(
-        db.String(120), nullable=False)
+        db.String(120), nullable=False, default='')
     postal_code = db.Column(
-        db.String(120), nullable=False)
+        db.String(120), nullable=False, default='')
     balance = db.Column(
-        db.Float, nullable=False, default=0)
+        db.Float, nullable=False, default=100)
 
     def __repr__(self):
         return '<ID %r>' % self.id
@@ -88,11 +88,10 @@ def register(name, email, password):
     # Initialize User with postal_code as ''
 
     # R1-10 Balance should be initialized as 100
-    balance = 100
+    # Default is set to 100 in the User class
 
     # create a new user
-    user = User(username=name, email=email, password=password,
-                ship_addr='', postal_code='', balance=balance)
+    user = User(username=name, email=email, password=password)
 
     # add it to the current database session
     db.session.add(user)
