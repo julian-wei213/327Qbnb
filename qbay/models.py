@@ -139,6 +139,10 @@ def login(email, password):
       Returns:
         The user object if login succeeded otherwise None
     '''
+    # R2-2 The login function should check if the supplied inputs
+    # meet the same email/password requirements as above(R1-1, R1-3, R1-4),
+    # before checking the database.
+
     # R1-1 check if the email or password are empty
     if not email or not password:
         return None
