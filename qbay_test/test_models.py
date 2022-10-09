@@ -1,6 +1,7 @@
 from qbay.models import register, login
 
-valid_password = 'abc#123'
+
+valid_password = 'Abc#123'
 
 def test_r2_1_login():
     '''
