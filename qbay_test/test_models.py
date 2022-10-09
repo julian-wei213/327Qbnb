@@ -160,6 +160,68 @@ def test_r1_10_user_register():
     assert user.balance == 100.0
 
 
+def test_r2_1_login():
+    '''
+    Testing R2-1: A user can log in using her/his email address 
+      and the password.
+    '''
+    # show that login works
+    user_registered = register('userr21', 'emailr21@email.com', valid_password)
+    user_log = login('emailr21@email.com', valid_password)
+    assert user_log is not None
+    assert user_log == user_registered
+
+
+def test_r2_2_login():
+    '''
+    The login function should check if the supplied inputs meet the same
+    email/password requirements as above, before checking the database.
+    '''
+    # This is hard to test here, I recommend checking models.py to confirm
+    # that it doesn't bother querrying if requirements aren't met, but
+    # will still show that it at least doesn't succeed in logging in.
+
+    # create user to test login on
+    register('userr22', 'emailr22@email.com', valid_password)
+
+    # Confirm R1-1
+    # Confirm that normal case works
+    assert login('emailr21@email.com', valid_password) is not None
+    # Ensure an empty email would fail
+    assert login('', valid_password) is None
+    # Ensure an empty password would fail
+    assert login('emailr22@email.com', '') is None
+
+    # Confirm R1-3
+    # Login can't work with invalid email
+    assert login('im proper@gmail.com', valid_password) is None
+    assert login('improper@gmail..com', valid_password) is None
+    assert login('.improper@gmail.com', valid_password) is None
+    assert login('improper@@gmail.com', valid_password) is None
+    assert login('improper@gmail.', valid_password) is None
+    assert login('improper@.com', valid_password) is None
+    assert login('_improper@.com', valid_password) is None
+    assert login('i@mproper@.com', valid_password) is None
+    assert login('im proper@gmail.com', valid_password) is None
+
+    # Confirm R1-4
+    # Login can't work with invalid password
+    for i in range(100):
+        string_length = random.randint(4, 10)
+        test_string = generate_string(string_length)
+
+        if (len(test_string) >= 6 and check_str_contains_lower(test_string)
+            and check_str_contains_upper(test_string)
+                and check_str_contains_special(test_string)):
+            register('ur22%i' % (i), 'r22%i@test.com'
+                     % (i), test_string)
+            assert login('r22%i@test.com' % (i), test_string) is not None
+        else:
+            register('ur22%i' % (i), 'r22%i@test.com'
+                     % (i), test_string)
+            assert login('r14%i@test.com' % (i), test_string) is None
+
+
 def test_r4_1_create_listing():
     '''
     Testing R4-1: The title of the product has to be alphanumeric-only, and

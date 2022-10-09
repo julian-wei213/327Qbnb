@@ -345,7 +345,30 @@ def login(email, password):
       Returns:
         The user object if login succeeded otherwise None
     '''
+    # R2-2 The login function should check if the supplied inputs
+    # meet the same email/password requirements as above(R1-1, R1-3, R1-4),
+    # before checking the database.
+
+    # R1-1 check if the email or password are empty
+    if not email or not password:
+        return None
+    # R1-3 The email has to follow addr-spec defined in RFC 5322
+    email_val = re.compile(
+        r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(.[A-Z|a-z]{2,})+')
+    if not re.fullmatch(email_val, email):
+        return None
+
+    # R1-4 Password has to meet the required complexity
+    # check if password is at least 6 characters,
+    # with upper, lower and special characters
+    if not (len(password) >= 6
+            and check_str_contains_lower(password)
+            and check_str_contains_upper(password)
+            and check_str_contains_special(password)):
+        return None
+    
     valids = User.query.filter_by(email=email, password=password).all()
     if len(valids) != 1:
         return None
+        
     return valids[0]
