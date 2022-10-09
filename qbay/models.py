@@ -1,7 +1,5 @@
 import re
-from queue import Empty
 import string
-from tokenize import String
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
 
@@ -47,7 +45,7 @@ def register(name: str, email: str, password: str):
       Returns:
         The object User otherwise None
     '''
-    
+
     # R1-1 check if the email or password are empty
     if not email or not password:
         return None
@@ -66,8 +64,12 @@ def register(name: str, email: str, password: str):
         return None
 
     # R1-4 Password has to meet the required complexity
-    # check if password is at least 6 characters, with upper, lower and special characters
-    if not (len(password) >= 6 and check_str_contains_lower(password) and check_str_contains_upper(password) and check_str_contains_special(password)):
+    # check if password is at least 6 characters,
+    # with upper, lower and special characters
+    if not (len(password) >= 6
+            and check_str_contains_lower(password)
+            and check_str_contains_upper(password)
+            and check_str_contains_special(password)):
         return None
 
     # R1-5 Username has to be non-empty
@@ -109,11 +111,13 @@ def register(name: str, email: str, password: str):
 
     return user
 
+
 def check_str_contains_upper(str):
     for x in str:
         if x == x.upper():
             return True
     return False
+
 
 def check_str_contains_lower(str):
     for x in str:
@@ -121,8 +125,10 @@ def check_str_contains_lower(str):
             return True
     return False
 
+
 def check_str_contains_special(str):
     return any(special in str for special in string.punctuation)
+
 
 def login(email, password):
     '''
