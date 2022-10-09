@@ -1,5 +1,4 @@
 import re
-import random
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
 
