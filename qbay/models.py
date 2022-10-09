@@ -32,6 +32,61 @@ class User(db.Model):
     def __repr__(self):
         return '<ID %r>' % self.id
 
+    def update_name(self, name):
+        '''
+        A user is able to update his/her user name.
+        '''
+        # R1-5 Username has to be non-empty
+        if name == '':
+            return False
+
+        # R1-5 Alpahnumerical, and space allowed only as not prefix/suffix
+        name_validation = re.compile('^(?! )[A-Za-z0-9 ]*(?<! )$')
+        if not re.fullmatch(name_validation, name):
+            return False
+
+        # R1-6 Username has to be longer than 2 but shorter than 20
+        if len(name) < 3:
+            return False
+        elif len(name) > 19:
+            return False
+        
+        self.username = name 
+        return True
+
+    def update_email(self, email):
+        '''
+        A user is able to update his/her user email.
+        '''
+        # R1-1 check if the email is empty
+        if not email:
+            return False
+        # R1-3 The email has to follow addr-spec defined in RFC 5322
+        email_val = re.compile(
+            r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(.[A-Z|a-z]{2,})+')
+        if not re.fullmatch(email_val, email):
+            return False
+        
+        self.email = email
+        return True
+
+    def update_address(self, address):
+        '''
+        A user is able to update his/her billing address.
+        '''
+        self.ship_addr = address
+    
+    def update_postal_code(self, postal_code):
+        '''
+        A user is able to update his/her postal code.
+        '''
+        canadian_postal_code = re.compile('[A-Z][0-9][A-Z] [0-9][A-Z][0-9]')
+        if not re.fullmatch(canadian_postal_code, postal_code):
+            return False
+
+        self.postal_code = postal_code
+        return True
+
 
 class Listing(db.Model):
     '''
@@ -349,3 +404,4 @@ def login(email, password):
     if len(valids) != 1:
         return None
     return valids[0]
+    
