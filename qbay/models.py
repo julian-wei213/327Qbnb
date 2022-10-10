@@ -88,6 +88,31 @@ class User(db.Model):
         return True
 
 
+class Review(db.Model):
+    '''
+    Listing model
+      Attributes:
+        id (Integer):              listing id
+        user_id (Integer):         id of reviewer
+        listing_id (Integer):      id of listing
+        review text (String):      review text
+        date (Date):               date of the review
+    '''
+    id = db.Column(
+        db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer, db.ForeignKey('user.id'), nullable=False)
+    listing_id = db.Column(
+        db.Integer, db.ForeignKey('listing.id'), nullable=False)
+    review_text = db.Column(
+        db.String(2000), nullable=False)
+    date = db.Column(
+        db.Date)
+
+    def __repr__(self):
+        return '<Listing %r>' % self.title
+    
+
 class Listing(db.Model):
     '''
     Listing model
