@@ -15,6 +15,17 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
+    '''
+    User model
+      Attributes:
+        id (Integer):              user id
+        username (String):         username
+        email (String):            user email
+        password (String):         user password
+        ship_addr (String):        user ship address
+        postal_code (String):      user postal code
+        balance (Integer):         user balance
+    '''
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(
         db.String(80), nullable=False)
@@ -139,6 +150,27 @@ class Listing(db.Model):
 
     def __repr__(self):
         return '<Listing %r>' % self.title
+
+
+class Booking(db.Model):
+    '''
+    Booking model
+      Attributes:
+        id (Integer):              booking id
+        user_id (Integer):         user id
+        listing_id (Integer)       listing id
+        price (Float)              price of listing
+        date (Date)                date of upload
+    '''
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    listing_id = db.Column(db.Integer, db.ForeignKey('listing.id'),
+                           nullable=False)
+    price = db.Column(db.Float(2, True), nullable=False)
+    date = db.Column(db.Date, default=date.today())
+
+    def __repr__(self):
+        return '<Booking %r>' % self.id
 
 
 # create all tables
