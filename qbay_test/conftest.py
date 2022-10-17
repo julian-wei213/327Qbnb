@@ -1,4 +1,5 @@
 import os
+from qbay.models import login, User, register
 from qbay import app
 
 '''
