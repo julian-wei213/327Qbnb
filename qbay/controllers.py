@@ -125,19 +125,22 @@ def create_listing_post():
     title = request.form.get('title')
     description = request.form.get('description')
     price = float(request.form.get('price'))
+    
     error_message = None
     
+    user_id = User.query.filter_by(email=session['logged_in']).first().id
     # use backend api to create listing
-    success = create_listing(title, description, price, date.today(), User.query.filter_by(email=session['logged_in']).first().id)
+    success = create_listing(title, description, price, date.today(), user_id)
     if not success:
         error_message = "Listing Creation failed."
         
-    # if there is any error messages when creating new listing
-    # at the backend, go back to the create listing page.
+    # Display error message if listing creation failed.
+    # Otherwise, display confirmation message.
     if error_message:
         return render_template('create_listing.html', message=error_message)
     else:
-        return render_template('create_listing.html', message='Listing Creation succeeded!')
+        return render_template('create_listing.html',
+                               message='Listing Creation succeeded!')
 
 
 @app.route('/logout')
