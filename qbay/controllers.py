@@ -113,6 +113,17 @@ def register_post():
         return redirect('/login')
 
 
+@app.route('/profile_update', methods=['GET'])
+def profile_update_get():
+    # render the profile_update html page when linked to /profile_update
+    return render_template('profile_update.html', message='')
+
+
+@app.route('/profile_update', methods=['POST'])
+def profile_update_post():
+    # TODO
+    return redirect('/', code=303)
+
 @app.route('/logout')
 def logout():
     if 'logged_in' in session:
