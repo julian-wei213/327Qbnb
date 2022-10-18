@@ -1,5 +1,7 @@
 from flask import render_template, request, session, redirect
-from qbay.models import login, User, register
+from qbay.models import login, User, Listing, register, create_listing
+from qbay.models import update_listing
+from datetime import date
 
 
 from qbay import app
@@ -118,3 +120,65 @@ def logout():
     if 'logged_in' in session:
         session.pop('logged_in', None)
     return redirect('/')
+
+
+@app.route('/update_listing', methods=['GET'])
+def update_listing_get():
+    listings = Listing.query.order_by(Listing.id).all()
+    return render_template('update_listing.html', listings=listings,
+                           message='')
+
+
+@app.route('/update_listing', methods=['POST'])
+def update_listing_post():
+    id = request.form.get('id')
+    title = request.form.get('title')
+    description = request.form.get('description')
+    price = float(request.form.get('price'))
+
+    listing = Listing.query.filter_by(id=id).first()
+
+    err_message = ''
+    success = update_listing(listing, title=title,
+                             description=description, price=price)
+
+    if not success:
+        err_message = "List Update FAILED"
+
+    if err_message:
+        listings = Listing.query.order_by(Listing.id).all()
+        return render_template('update_listing.html',
+                               listings=listings, message=err_message)
+    else:
+        listings = Listing.query.order_by(Listing.id).all()
+        return render_template('update_listing.html', listings=listings,
+                               message="List Update PASSED")
+
+
+@app.route('/create_listing', methods=['GET'])
+def create_listing_get():
+    # templates are stored in the templates folder
+    return render_template('create_listing.html', message='')
+
+
+@app.route('/create_listing', methods=['POST'])
+def create_listing_post():
+    title = request.form.get('title')
+    description = request.form.get('description')
+    price = float(request.form.get('price'))
+
+    error_message = None
+
+    user_id = User.query.filter_by(email=session['logged_in']).first().id
+    # use backend api to create listing
+    success = create_listing(title, description, price, date.today(), user_id)
+    if not success:
+        error_message = "Listing Creation failed."
+
+    # Display error message if listing creation failed.
+    # Otherwise, display confirmation message.
+    if error_message:
+        return render_template('create_listing.html', message=error_message)
+    else:
+        return render_template('create_listing.html',
+                               message='Listing Creation succeeded!')
