@@ -3,6 +3,24 @@
 {% block content %}
 <h1>{% block title %}Create Listing{% endblock %}</h1>
 <h4 id='message'>{{message}}</h4>
+
+<table cellpadding="10" cellspacing="10">
+  <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Price</th>
+  </tr>
+  {% for listing in listings %}
+      <tr>
+          <td>{{ listing.id }}</td>
+          <td>{{ listing.title }}</td>
+          <td>{{ listing.description }}</td>
+          <td>{{'%0.2f' % listing.price|float }}</td>
+      </tr>
+  {% endfor %}
+</table>
+
 <form method="post">
   <div class="form-group">
     <label for="title">Title</label>
