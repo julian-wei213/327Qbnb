@@ -124,61 +124,50 @@ def logout():
 
 @app.route('/update_listing', methods=['GET'])
 def update_listing_get():
+    """
+    Function for Get commands 
+    """
+
+    # Get all listings in database
     listings = Listing.query.order_by(Listing.id).all()
+
+    # Render the template
     return render_template('update_listing.html', listings=listings,
                            message='')
 
 
 @app.route('/update_listing', methods=['POST'])
 def update_listing_post():
-    id = request.form.get('id')
-    title = request.form.get('title')
+    """
+    Function handling post commands for updating listing page
+    """
+    id = request.form.get('id')  # ID of the listing
+
+    # Information to be passed for update
+    title = request.form.get('title') 
     description = request.form.get('description')
     price = float(request.form.get('price'))
 
+    # Get the listing with the specific ID
     listing = Listing.query.filter_by(id=id).first()
 
     err_message = ''
+
+    # Use backend update listing function
     success = update_listing(listing, title=title,
                              description=description, price=price)
 
+    # If update failed update error message
     if not success:
         err_message = "List Update FAILED"
 
     if err_message:
+        # If error message is not null render page with fail message
         listings = Listing.query.order_by(Listing.id).all()
         return render_template('update_listing.html',
                                listings=listings, message=err_message)
     else:
+        # If update success update page with success message
         listings = Listing.query.order_by(Listing.id).all()
         return render_template('update_listing.html', listings=listings,
                                message="List Update PASSED")
-
-
-@app.route('/create_listing', methods=['GET'])
-def create_listing_get():
-    # templates are stored in the templates folder
-    return render_template('create_listing.html', message='')
-
-
-@app.route('/create_listing', methods=['POST'])
-def create_listing_post():
-    title = request.form.get('title')
-    description = request.form.get('description')
-    price = float(request.form.get('price'))
-
-    error_message = None
-
-    user_id = User.query.filter_by(email=session['logged_in']).first().id
-    # use backend api to create listing
-    success = create_listing(title, description, price, date.today(), user_id)
-    if not success:
-        error_message = "Listing Creation failed."
-
-    # Display error message if listing creation failed.
-    # Otherwise, display confirmation message.
-    if error_message:
-        return render_template('create_listing.html', message=error_message)
-    else:
-        return render_template('create_listing.html',
-                               message='Listing Creation succeeded!')
