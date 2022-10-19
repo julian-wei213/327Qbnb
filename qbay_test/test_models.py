@@ -228,21 +228,21 @@ def test_r3_1_update_user():
       user email, billing address, and postal code.
     '''
     # add user to database
-    user = register('userr31', 'anemailr31@email.com', valid_password)
+    user = register('userr31','anemailr31@email.com', valid_password)
+    assert user is not None
     new_name = "new " + user.username
     new_email = "new" + user.email
     new_address = "new" + user.ship_addr
     new_postal_code = "A1A 1A1"
     # update all posible fields
-    user.update_name(new_name)
-    user.update_email(new_email)
-    user.update_address(new_address)
-    user.update_postal_code(new_postal_code)
+    user.update_user(new_name, new_email, new_address, new_postal_code)
+
     # confirm they were changed
-    assert user.username == new_name
-    assert user.email == new_email
-    assert user.ship_addr == new_address
-    assert user.postal_code == new_postal_code
+    user2 = login(new_email, valid_password)
+    assert user2.username == new_name
+    assert user2.email == new_email
+    assert user2.ship_addr == new_address
+    assert user2.postal_code == new_postal_code
 
 
 def test_r3_2_update_user():

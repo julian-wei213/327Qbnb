@@ -42,6 +42,16 @@ class User(db.Model):
 
     def __repr__(self):
         return '<ID %r>' % self.id
+    
+    def update_user(self, username:str = None, email:str = None, ship_addr:str = None, postal_code:str = None):
+        if username:
+            self.update_name(username)
+        if email:
+            self.update_email(email)
+        if ship_addr:
+            self.update_address(ship_addr)
+        if postal_code:
+            self.update_postal_code(postal_code)
 
     def update_name(self, name):
         '''
@@ -63,6 +73,7 @@ class User(db.Model):
             return False
         
         self.username = name 
+        db.session.commit()
         return True
 
     def update_email(self, email):
@@ -79,6 +90,7 @@ class User(db.Model):
             return False
         
         self.email = email
+        db.session.commit()
         return True
 
     def update_address(self, address):
@@ -86,6 +98,8 @@ class User(db.Model):
         A user is able to update his/her billing address.
         '''
         self.ship_addr = address
+        db.session.commit()
+        return True
     
     def update_postal_code(self, postal_code):
         '''
@@ -96,6 +110,7 @@ class User(db.Model):
             return False
 
         self.postal_code = postal_code
+        db.session.commit()
         return True
 
 
