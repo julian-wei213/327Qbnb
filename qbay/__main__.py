@@ -20,4 +20,6 @@ if __name__ == "__main__":
     register('user3', user3['email'], user3['password'])
     register('user4', user4['email'], user4['password'])
 
+    # login(user1['email'], user1['password'])
+
     app.run(debug=True, port=FLASK_PORT)

@@ -10,23 +10,15 @@
 <form method="post">
   <div class="form-group">
     <label for="name">Name</label>
-    <input class="form-control" name="name" id="name" placeholder="">
+    <input class="form-control" name="name" id="name" placeholder={{user_name_placeholder}}>
     <label for="email">Email</label>
-    <input class="form-control" name="email" id="email" required>
-    <label for="name">Name</label>
-    <input class="form-control" name="name" id="name" required>
-    <label for="password">Password</label>
-    <input class="form-control" type="password" name="password" id="password" required>
-    <label for="password">Confirm Password</label>
-    <input class="form-control" type="password" name="password2" id="password2" required>
-    <input class="btn btn-primary" type="submit" value="Register">
-  <a href='/login' class="btn btn-primary" id="btn-submit" >LoginAHHHHH</a>
+    <input class="form-control" name="email" id="email" placeholder={{user_email_placeholder}}>
+    <label for="bill_addr">Billing Address</label>
+    <input class="form-control" name="bill_addr" id="bill_addr" placeholder={{user_bill_placeholder}}>
+    <label for="postal_code">Postal Code</label>
+    <input class="form-control" name="postal_code" id="postal_code" placeholder={{user_postal_placeholder}}>
+    <input class="btn btn-primary" type="submit" value="Update">
   </div>
 </form>
+<a href='/'>Back to home</a>
 {% endblock %}
-
-
-dataset = [[col1], [col2]]
-
-for i in dataset -> [colx]
-  i[0] -> first element of each col

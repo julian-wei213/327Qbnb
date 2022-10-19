@@ -115,14 +115,31 @@ def register_post():
 
 @app.route('/profile_update', methods=['GET'])
 def profile_update_get():
+    # access user by quering for the email in the current session
+    user = User.query.filter_by(email=session['logged_in']).first()
     # render the profile_update html page when linked to /profile_update
-    return render_template('profile_update.html', message='')
+    username = user.username
+    email = user.email
+    bill = user.ship_addr
+    postal = user.postal_code
+
+    if bill == '':
+        bill = "You-have-yet-to-set-a-billing-address"
+    if postal == '':
+        postal = "You-have-yet-to-set-a-postal-code"
+
+    # use user data to display current placeholders
+    return render_template('profile_update.html',
+                            user_name_placeholder=username,
+                            user_email_placeholder=email,
+                            user_bill_placeholder=bill,
+                            user_postal_placeholder=postal)
 
 
 @app.route('/profile_update', methods=['POST'])
 def profile_update_post():
     # TODO
-    return redirect('/', code=303)
+    return redirect('/profile_update', code=303)
 
 @app.route('/logout')
 def logout():
