@@ -130,11 +130,11 @@ def profile_update_get():
 
     # use user data to display current placeholders
     return render_template('profile_update.html',
-                            message='',
-                            user_name_placeholder=username,
-                            user_email_placeholder=email,
-                            user_bill_placeholder=bill,
-                            user_postal_placeholder=postal)
+                           message='',
+                           user_name_placeholder=username,
+                           user_email_placeholder=email,
+                           user_bill_placeholder=bill,
+                           user_postal_placeholder=postal)
 
 
 @app.route('/profile_update', methods=['POST'])
@@ -162,24 +162,26 @@ def profile_update_post():
         postal = user.postal_code
 
     # Check for success after updated database
-    success = user.update_user(username=username, email=email, ship_addr=bill, postal_code=postal)
+    success = user.update_user(username=username, email=email,
+                               ship_addr=bill, postal_code=postal)
 
     # If success render html
     if success:
         return render_template('profile_update.html',
-                                message=success_msg,
-                                user_name_placeholder=user.username,
-                                user_email_placeholder=user.email,
-                                user_bill_placeholder=user.ship_addr,
-                                user_postal_placeholder=user.postal_code)
+                               message=success_msg,
+                               user_name_placeholder=user.username,
+                               user_email_placeholder=user.email,
+                               user_bill_placeholder=user.ship_addr,
+                               user_postal_placeholder=user.postal_code)
     else:
         # If fail, add error message to indicate failure
         return render_template('profile_update.html',
-                                message=err_msg,
-                                user_name_placeholder=user.username,
-                                user_email_placeholder=user.email,
-                                user_bill_placeholder=user.ship_addr,
-                                user_postal_placeholder=user.postal_code)
+                               message=err_msg,
+                               user_name_placeholder=user.username,
+                               user_email_placeholder=user.email,
+                               user_bill_placeholder=user.ship_addr,
+                               user_postal_placeholder=user.postal_code)
+
 
 @app.route('/logout')
 def logout():
