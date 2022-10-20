@@ -124,9 +124,9 @@ def profile_update_get():
     postal = user.postal_code
 
     if bill == '':
-        bill = "You-have-yet-to-set-a-billing-address"
+        bill = "You have yet to set a billing address"
     if postal == '':
-        postal = "You-have-yet-to-set-a-postal-code"
+        postal = "You have yet to set a postal code"
 
     # use user data to display current placeholders
     return render_template('profile_update.html',
@@ -144,12 +144,14 @@ def profile_update_post():
     bill = request.form.get('bill_addr')
     postal = request.form.get('postal_code')
 
+    # Custom messages
     err_msg = 'Invalid Input, Please Try Again!'
     success_msg = 'Profile Updated!'
 
     # access user by quering for the email in the current session
     user = User.query.filter_by(email=session['logged_in']).first()
 
+    # Update only the text boxes that were filled
     if username == '':
         username = user.username
     if email == '':
@@ -159,8 +161,10 @@ def profile_update_post():
     if postal == '':
         postal = user.postal_code
 
+    # Check for success after updated database
     success = user.update_user(username=username, email=email, ship_addr=bill, postal_code=postal)
 
+    # If success render html
     if success:
         return render_template('profile_update.html',
                                 message=success_msg,
@@ -169,6 +173,7 @@ def profile_update_post():
                                 user_bill_placeholder=user.ship_addr,
                                 user_postal_placeholder=user.postal_code)
     else:
+        # If fail, add error message to indicate failure
         return render_template('profile_update.html',
                                 message=err_msg,
                                 user_name_placeholder=user.username,
