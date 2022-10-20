@@ -44,14 +44,21 @@ class User(db.Model):
 
     def update_user(self, username: str = None, email: str = None,
                     ship_addr: str = None, postal_code: str = None):
+
+        ut = et = st = pt = True
         if username:
-            self.update_name(username)
+            ut = self.update_name(username)
         if email:
-            self.update_email(email)
+            et = self.update_email(email)
         if ship_addr:
-            self.update_address(ship_addr)
+            st = self.update_address(ship_addr)
         if postal_code:
-            self.update_postal_code(postal_code)
+            pt = self.update_postal_code(postal_code)
+
+        if ut and et and st and pt:
+            return True
+        else:
+            return False
 
     def update_name(self, name):
         '''

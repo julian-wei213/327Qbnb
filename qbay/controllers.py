@@ -130,6 +130,7 @@ def profile_update_get():
 
     # use user data to display current placeholders
     return render_template('profile_update.html',
+                            message='',
                             user_name_placeholder=username,
                             user_email_placeholder=email,
                             user_bill_placeholder=bill,
@@ -138,8 +139,42 @@ def profile_update_get():
 
 @app.route('/profile_update', methods=['POST'])
 def profile_update_post():
-    # TODO
-    return redirect('/profile_update', code=303)
+    username = request.form.get('name')
+    email = request.form.get('email')
+    bill = request.form.get('bill_addr')
+    postal = request.form.get('postal_code')
+
+    err_msg = 'Invalid Input, Please Try Again!'
+    success_msg = 'Profile Updated!'
+
+    # access user by quering for the email in the current session
+    user = User.query.filter_by(email=session['logged_in']).first()
+
+    if username == '':
+        username = user.username
+    if email == '':
+        email = user.email
+    if bill == '':
+        bill = user.ship_addr
+    if postal == '':
+        postal = user.postal_code
+
+    success = user.update_user(username=username, email=email, ship_addr=bill, postal_code=postal)
+
+    if success:
+        return render_template('profile_update.html',
+                                message=success_msg,
+                                user_name_placeholder=user.username,
+                                user_email_placeholder=user.email,
+                                user_bill_placeholder=user.ship_addr,
+                                user_postal_placeholder=user.postal_code)
+    else:
+        return render_template('profile_update.html',
+                                message=err_msg,
+                                user_name_placeholder=user.username,
+                                user_email_placeholder=user.email,
+                                user_bill_placeholder=user.ship_addr,
+                                user_postal_placeholder=user.postal_code)
 
 @app.route('/logout')
 def logout():
