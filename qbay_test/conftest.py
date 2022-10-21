@@ -1,11 +1,8 @@
 import os
-from qbay.models import login, User, register
 from qbay import app
 
 '''
 This file defines what to do BEFORE running any test cases:
-
-
 '''
 
 
