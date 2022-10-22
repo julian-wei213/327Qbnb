@@ -1,5 +1,6 @@
 from flask import render_template, request, session, redirect
-from qbay.models import login, User, register
+from qbay.models import login, User, register, create_listing, Listing
+from datetime import date
 
 
 from qbay import app
@@ -111,6 +112,39 @@ def register_post():
         return render_template('register.html', message=error_message)
     else:
         return redirect('/login')
+
+
+@app.route('/create_listing', methods=['GET'])
+def create_listing_get():
+    # templates are stored in the templates folder
+    listings = Listing.query.order_by(Listing.id).all()
+    return render_template('create_listing.html',
+                           listings=listings, message='')
+
+
+@app.route('/create_listing', methods=['POST'])
+def create_listing_post():
+    title = request.form.get('title')
+    description = request.form.get('description')
+    price = float(request.form.get('price'))
+    
+    error_message = None
+    
+    user_id = User.query.filter_by(email=session['logged_in']).first().id
+    # use backend api to create listing
+    success = create_listing(title, description, price, date.today(), user_id)
+    if not success:
+        error_message = "Listing Creation failed."
+        
+    # Display error message if listing creation failed.
+    # Otherwise, display confirmation message.
+    listings = Listing.query.order_by(Listing.id).all()
+    if error_message:
+        return render_template('create_listing.html', listings=listings,
+                               message=error_message)
+    else:
+        return render_template('create_listing.html', listings=listings,
+                               message='Listing Creation succeeded!')
 
 
 @app.route('/logout')
