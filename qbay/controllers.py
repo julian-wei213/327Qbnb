@@ -115,7 +115,6 @@ def register_post():
         return redirect('/login')
 
 
-
 @app.route('/profile_update', methods=['GET'])
 def profile_update_get():
     # access user by quering for the email in the current session
