@@ -1,5 +1,6 @@
 from flask import render_template, request, session, redirect
-from qbay.models import login, User, register, create_listing, Listing
+from qbay.models import login, User, Listing, register, create_listing
+from qbay.models import update_listing
 from datetime import date
 
 
@@ -152,3 +153,54 @@ def logout():
     if 'logged_in' in session:
         session.pop('logged_in', None)
     return redirect('/')
+
+
+@app.route('/update_listing', methods=['GET'])
+def update_listing_get():
+    """
+    Function for Get commands 
+    """
+
+    # Get all listings in database
+    listings = Listing.query.order_by(Listing.id).all()
+
+    # Render the template
+    return render_template('update_listing.html', listings=listings,
+                           message='')
+
+
+@app.route('/update_listing', methods=['POST'])
+def update_listing_post():
+    """
+    Function handling post commands for updating listing page
+    """
+    id = request.form.get('id')  # ID of the listing
+
+    # Information to be passed for update
+    title = request.form.get('title') 
+    description = request.form.get('description')
+    price = float(request.form.get('price'))
+
+    # Get the listing with the specific ID
+    listing = Listing.query.filter_by(id=id).first()
+
+    err_message = ''
+
+    # Use backend update listing function
+    success = update_listing(listing, title=title,
+                             description=description, price=price)
+
+    # If update failed update error message
+    if not success:
+        err_message = "List Update FAILED"
+
+    if err_message:
+        # If error message is not null render page with fail message
+        listings = Listing.query.order_by(Listing.id).all()
+        return render_template('update_listing.html',
+                               listings=listings, message=err_message)
+    else:
+        # If update success update page with success message
+        listings = Listing.query.order_by(Listing.id).all()
+        return render_template('update_listing.html', listings=listings,
+                               message="List Update PASSED")
