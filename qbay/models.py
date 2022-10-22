@@ -2,7 +2,6 @@ import re
 import string
 from qbay import app
 from flask_sqlalchemy import SQLAlchemy
-import re
 from datetime import date
 
 
@@ -43,6 +42,24 @@ class User(db.Model):
     def __repr__(self):
         return '<ID %r>' % self.id
 
+    def update_user(self, username: str = None, email: str = None,
+                    ship_addr: str = None, postal_code: str = None):
+
+        ut = et = st = pt = True
+        if username:
+            ut = self.update_name(username)
+        if email:
+            et = self.update_email(email)
+        if ship_addr:
+            st = self.update_address(ship_addr)
+        if postal_code:
+            pt = self.update_postal_code(postal_code)
+
+        if ut and et and st and pt:
+            return True
+        else:
+            return False
+
     def update_name(self, name):
         '''
         A user is able to update his/her user name.
@@ -61,8 +78,9 @@ class User(db.Model):
             return False
         elif len(name) > 19:
             return False
-        
-        self.username = name 
+
+        self.username = name
+        db.session.commit()
         return True
 
     def update_email(self, email):
@@ -77,8 +95,9 @@ class User(db.Model):
             r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(.[A-Z|a-z]{2,})+')
         if not re.fullmatch(email_val, email):
             return False
-        
+
         self.email = email
+        db.session.commit()
         return True
 
     def update_address(self, address):
@@ -86,7 +105,9 @@ class User(db.Model):
         A user is able to update his/her billing address.
         '''
         self.ship_addr = address
-    
+        db.session.commit()
+        return True
+
     def update_postal_code(self, postal_code):
         '''
         A user is able to update his/her postal code.
@@ -96,6 +117,7 @@ class User(db.Model):
             return False
 
         self.postal_code = postal_code
+        db.session.commit()
         return True
 
 
@@ -122,7 +144,7 @@ class Review(db.Model):
 
     def __repr__(self):
         return '<Listing %r>' % self.title
-    
+
 
 class Listing(db.Model):
     '''
@@ -258,7 +280,7 @@ def update_listing(listing, title=None, description=None, price=None):
         # If price is of instane float
         if not isinstance(price, float):
             return None
-        
+
         # Satisfy R4-5
         if price < 10 or price > 10000:
             return None
@@ -266,7 +288,7 @@ def update_listing(listing, title=None, description=None, price=None):
         # Satisfy R5-2
         if price < listing.price:
             return None
-        
+
         # Update price
         listing.price = price
 
@@ -300,51 +322,51 @@ def create_listing(title: str, description: str, price: float,
     # Satisfy R4-1
     if title == '':
         return None
-    
+
     if title[0] == ' ' or title[-1] == ' ':
         return None
-    
+
     if not title.replace(' ', '').isalnum():
         return None
 
     # Satisfy R4-2
     if len(title) > 80:
         return None
-    
+
     # Satisfy R4-3
     if len(description) < 20 or len(description) > 2000:
         return None
-    
+
     # Satisfy R4-4
     if len(description) <= len(title):
         return None
-    
+
     # Satisfy R4-5
     if price < 10 or price > 10000:
         return None
-    
+
     # Satisfy R4-6
     if last_modified_date <= date(2021, 1, 2) or \
        last_modified_date >= date(2025, 1, 2):
         return None
-    
+
     # Satisfy R4-7
     user = User.query.filter_by(id=owner_id).first()
     if user is None:
         return None
-    
+
     if user.email == '':
         return None
-    
+
     # Satisfy R4-8
     if len(Listing.query.filter_by(title=title).all()) > 0:
         return None
-    
+
     # create a new listing
     listing = Listing(title=title, description=description,
                       price=price, last_modified_date=last_modified_date,
                       owner_id=owner_id)
-    
+
     # add it to the current database session
     db.session.add(listing)
     # actually save the user object
@@ -478,10 +500,9 @@ def login(email, password):
             and check_str_contains_upper(password)
             and check_str_contains_special(password)):
         return None
-    
+
     valids = User.query.filter_by(email=email, password=password).all()
     if len(valids) != 1:
         return None
-        
+
     return valids[0]
-    

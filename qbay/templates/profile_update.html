@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Profile Update{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<h4 id='message'>{{message}}</h4>
+<form method="post">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input class="form-control" name="name" id="name" placeholder="{{user_name_placeholder}}">
+    <label for="email">Email</label>
+    <input class="form-control" name="email" id="email" placeholder="{{user_email_placeholder}}">
+    <label for="bill_addr">Billing Address</label>
+    <input class="form-control" name="bill_addr" id="bill_addr" placeholder="{{user_bill_placeholder}}">
+    <label for="postal_code">Postal Code</label>
+    <input class="form-control" name="postal_code" id="postal_code" placeholder="{{user_postal_placeholder}}">
+    <input class="btn btn-primary" type="submit" value="Update">
+  </div>
+</form>
+<a href='/'>Back to home</a>
+{% endblock %}
