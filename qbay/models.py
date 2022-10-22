@@ -217,7 +217,7 @@ def update_listing(listing, title=None, description=None, price=None):
 
     # If listing is not of instance Listing
     if not isinstance(listing, Listing):
-        return listing
+        return None
 
     # If title was given
     if title is not None:
