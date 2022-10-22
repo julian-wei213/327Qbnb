@@ -169,6 +169,7 @@ def profile_update_post():
 
     # If success render html
     if success:
+        session['logged_in'] = user.email
         return render_template('profile_update.html',
                                message=success_msg,
                                user_name_placeholder=user.username,
@@ -198,15 +199,15 @@ def create_listing_post():
     title = request.form.get('title')
     description = request.form.get('description')
     price = float(request.form.get('price'))
-    
+
     error_message = None
-    
+
     user_id = User.query.filter_by(email=session['logged_in']).first().id
     # use backend api to create listing
     success = create_listing(title, description, price, date.today(), user_id)
     if not success:
         error_message = "Listing Creation failed."
-        
+
     # Display error message if listing creation failed.
     # Otherwise, display confirmation message.
     listings = Listing.query.order_by(Listing.id).all()
@@ -228,7 +229,7 @@ def logout():
 @app.route('/update_listing', methods=['GET'])
 def update_listing_get():
     """
-    Function for Get commands 
+    Function for Get commands
     """
 
     # Get all listings in database
@@ -247,7 +248,7 @@ def update_listing_post():
     id = request.form.get('id')  # ID of the listing
 
     # Information to be passed for update
-    title = request.form.get('title') 
+    title = request.form.get('title')
     description = request.form.get('description')
     price = float(request.form.get('price'))
 
