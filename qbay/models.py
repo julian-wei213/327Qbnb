@@ -44,7 +44,9 @@ class User(db.Model):
 
     def update_user(self, username: str = None, email: str = None,
                     ship_addr: str = None, postal_code: str = None):
-
+        '''
+        Updates user properties.
+        '''
         ut = et = st = pt = True
         if username:
             ut = self.update_name(username)
@@ -453,6 +455,9 @@ def register(name, email, password):
 
 
 def check_str_contains_upper(str):
+    '''
+    Checks if str contains an upper case letter
+    '''
     for x in str:
         if x == x.upper():
             return True
@@ -460,6 +465,9 @@ def check_str_contains_upper(str):
 
 
 def check_str_contains_lower(str):
+    '''
+    Checks if str contains a lower case letter
+    '''
     for x in str:
         if x == x.lower():
             return True
@@ -467,6 +475,9 @@ def check_str_contains_lower(str):
 
 
 def check_str_contains_special(str):
+    '''
+    Checks if str contains punctuations
+    '''
     return any(special in str for special in string.punctuation)
 
 
