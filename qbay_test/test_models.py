@@ -73,6 +73,9 @@ def test_r1_4_user_register():
 
 
 def generate_string(string_length):
+    """
+    Generates a random string of string_length
+    """
     generated = ""
     for i in range(string_length):
         # pick an upper or lower case character
@@ -290,6 +293,9 @@ def test_r3_3_update_user():
 
 
 def generate_canadian_postal_code():
+    """
+    Generates a random Canadian postal code
+    """
     code = ""
     code += random.choice(string.ascii_uppercase)
     code += random.choice(string.digits)

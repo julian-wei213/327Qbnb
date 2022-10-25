@@ -43,11 +43,17 @@ def authenticate(inner_function):
 
 @app.route('/login', methods=['GET'])
 def login_get():
+    """
+    Handles get command for login page
+    """
     return render_template('login.html', message='Please login')
 
 
 @app.route('/login', methods=['POST'])
 def login_post():
+    """
+    Handles post command for login page
+    """
     email = request.form.get('email')
     password = request.form.get('password')
     user = login(email, password)
@@ -88,12 +94,18 @@ def home(user):
 
 @app.route('/register', methods=['GET'])
 def register_get():
+    """
+    Handles get command for register page
+    """
     # templates are stored in the templates folder
     return render_template('register.html', message='')
 
 
 @app.route('/register', methods=['POST'])
 def register_post():
+    """
+    Handles post command for register page
+    """
     email = request.form.get('email')
     name = request.form.get('name')
     password = request.form.get('password')
@@ -117,6 +129,9 @@ def register_post():
 
 @app.route('/profile_update', methods=['GET'])
 def profile_update_get():
+    """
+    Handles get command for profile update page
+    """
     # access user by quering for the email in the current session
     user = User.query.filter_by(email=session['logged_in']).first()
     # render the profile_update html page when linked to /profile_update
@@ -141,6 +156,9 @@ def profile_update_get():
 
 @app.route('/profile_update', methods=['POST'])
 def profile_update_post():
+    """
+    Handles post command for profile update page
+    """
     username = request.form.get('name')
     email = request.form.get('email')
     bill = request.form.get('bill_addr')
@@ -188,6 +206,9 @@ def profile_update_post():
 
 @app.route('/create_listing', methods=['GET'])
 def create_listing_get():
+    """
+    Handles get command for create listing page
+    """
     # templates are stored in the templates folder
     listings = Listing.query.order_by(Listing.id).all()
     return render_template('create_listing.html',
@@ -196,6 +217,9 @@ def create_listing_get():
 
 @app.route('/create_listing', methods=['POST'])
 def create_listing_post():
+    """
+    Handles post command for create listing page
+    """
     title = request.form.get('title')
     description = request.form.get('description')
     price = float(request.form.get('price'))
@@ -221,6 +245,9 @@ def create_listing_post():
 
 @app.route('/logout')
 def logout():
+    """
+    Logout page
+    """
     if 'logged_in' in session:
         session.pop('logged_in', None)
     return redirect('/')
