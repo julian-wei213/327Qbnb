@@ -295,7 +295,7 @@ class FrontEndCreateListingTest(BaseCase):
         self.assert_element('#message')
         self.assert_text('Listing Creation succeeded!', '#message')
         
-        # Case 2: Price is $10.00
+        # Case 2: Price is $9.99
         self.type('#title', '45test2')
         self.type('#description', '0' * 20)
         self.type('#price', 9.99)
