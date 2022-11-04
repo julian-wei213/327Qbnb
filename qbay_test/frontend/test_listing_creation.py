@@ -178,8 +178,9 @@ class FrontEndCreateListingTest(BaseCase):
         
     def test_r4_3_create_listing(self, *_):
         '''
-        Testing R4-3: The description of the product can be arbitrary characters,
-        with a minimum length of 20 characters and a maximum of 2000 characters.
+        Testing R4-3: The description of the product can be arbitrary
+        characters, with a minimum length of 20 characters and a maximum
+        of 2000 characters.
         
         Testing method: Shotgun testing
         '''
@@ -225,7 +226,6 @@ class FrontEndCreateListingTest(BaseCase):
             self.click('input[type="submit"]')
             self.assert_element('#message')
             self.assert_text('Listing Creation failed.', 'h4')
-
         
     def test_r4_4_create_listing(self, *_):
         '''
@@ -258,7 +258,7 @@ class FrontEndCreateListingTest(BaseCase):
         self.assert_text('Listing Creation succeeded!', '#message')
         
         # Case 2: Description is equal to title length
-        self.type('#title',  'j' * 20)
+        self.type('#title', 'j' * 20)
         self.type('#description', '0' * 20)
         self.type('#price', 30.00)
         self.click('input[type="submit"]')
@@ -296,7 +296,7 @@ class FrontEndCreateListingTest(BaseCase):
         self.assert_text('Listing Creation succeeded!', '#message')
         
         # Case 2: Price is $10.00
-        self.type('#title',  '45test2')
+        self.type('#title', '45test2')
         self.type('#description', '0' * 20)
         self.type('#price', 9.99)
         self.click('input[type="submit"]')
@@ -312,7 +312,7 @@ class FrontEndCreateListingTest(BaseCase):
         self.assert_text('Listing Creation succeeded!', '#message')
         
         # Case 4: Price is $10000.01
-        self.type('#title',  '45test4')
+        self.type('#title', '45test4')
         self.type('#description', '0' * 20)
         self.type('#price', 10000.01)
         self.click('input[type="submit"]')
@@ -374,7 +374,7 @@ class FrontEndCreateListingTest(BaseCase):
         self.open(base_url + '/create_listing')
 
         # Case 4: Price is $10000.01
-        self.type('#title',  '47test')
+        self.type('#title', '47test')
         self.type('#description', '0' * 20)
         self.type('#price', 30.00)
         self.click('input[type="submit"]')
@@ -420,7 +420,7 @@ class FrontEndCreateListingTest(BaseCase):
         self.assert_text('Listing Creation failed.', 'h4')
         
         # Case 2: Listing has differnt title
-        self.type('#title',  '48testdiff')
+        self.type('#title', '48testdiff')
         self.type('#description', '0' * 20)
         self.type('#price', 10.00)
         self.click('input[type="submit"]')
