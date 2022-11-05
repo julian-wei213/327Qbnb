@@ -244,7 +244,7 @@ def update_listing(listing, title=None, description=None, price=None):
 
         # Satisfy R4-8
         existed = Listing.query.filter_by(title=title).all()
-        if len(existed) > 0:
+        if len(existed) > 0 and listing.title != title:
             return None
 
         # Update title
@@ -265,12 +265,12 @@ def update_listing(listing, title=None, description=None, price=None):
         if title is not None:
 
             # Satisfy R4-4
-            if len(description) < len(title):
+            if len(description) <= len(title):
                 return None
         else:
 
             # Satisfy R4-4
-            if len(description) < len(listing.title):
+            if len(description) <= len(listing.title):
                 return None
 
         # Update description
@@ -288,7 +288,7 @@ def update_listing(listing, title=None, description=None, price=None):
             return None
 
         # Satisfy R5-2
-        if price < listing.price:
+        if price <= listing.price:
             return None
 
         # Update price

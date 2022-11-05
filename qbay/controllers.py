@@ -253,31 +253,54 @@ def logout():
     return redirect('/')
 
 
-@app.route('/update_listing', methods=['GET'])
-def update_listing_get():
+@app.route('/listing', methods=['GET'])
+def listing():
+    """
+    function handling the GET method for /listing
+    """
+    # Get the id of the logged on user
+    user_id = User.query.filter_by(email=session['logged_in']).first().id
+
+    # Get all listings in database
+    listings = Listing.query.filter_by(owner_id=user_id).all()
+
+    # load the template
+    return render_template('listing.html', listings=listings,
+                           message='Here are all your listings')
+
+
+@app.route('/listing/update/<int:id>', methods=['GET'])
+def update_listing_get(id):
     """
     Function for Get commands
     """
-
     # Get all listings in database
-    listings = Listing.query.order_by(Listing.id).all()
+    listing = Listing.query.filter_by(id=id).all()
 
     # Render the template
-    return render_template('update_listing.html', listings=listings,
+    return render_template('update_listing.html', listing=listing,
                            message='')
 
 
-@app.route('/update_listing', methods=['POST'])
-def update_listing_post():
+@app.route('/listing/update/<int:id>', methods=['POST'])
+def update_listing_post(id):
     """
     Function handling post commands for updating listing page
     """
-    id = request.form.get('id')  # ID of the listing
-
     # Information to be passed for update
     title = request.form.get('title')
     description = request.form.get('description')
-    price = float(request.form.get('price'))
+
+    # Check if any of the inputs are empty
+    if (request.form.get('price') == ""):
+        price = None
+    else:
+        price = float(request.form.get('price'))
+
+    if (title == ""):
+        title = None
+    if (description == ""):
+        description = None
 
     # Get the listing with the specific ID
     listing = Listing.query.filter_by(id=id).first()
@@ -292,13 +315,14 @@ def update_listing_post():
     if not success:
         err_message = "List Update FAILED"
 
+    # Change the listing to reflect changes
+    listing = Listing.query.filter_by(id=id).all()
+
     if err_message:
         # If error message is not null render page with fail message
-        listings = Listing.query.order_by(Listing.id).all()
         return render_template('update_listing.html',
-                               listings=listings, message=err_message)
+                               listing=listing, message=err_message)
     else:
         # If update success update page with success message
-        listings = Listing.query.order_by(Listing.id).all()
-        return render_template('update_listing.html', listings=listings,
+        return render_template('update_listing.html', listing=listing,
                                message="List Update PASSED")
