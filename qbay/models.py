@@ -243,7 +243,8 @@ def update_listing(listing, title=None, description=None, price=None):
             return None
 
         # Satisfy R4-8
-        existed = Listing.query.filter_by(title=title).all()
+        existed = Listing.query.filter_by(title=title,
+                                          owner_id=listing.owner_id).all()
         if len(existed) > 0 and listing.title != title:
             return None
 
