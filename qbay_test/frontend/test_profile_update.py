@@ -15,49 +15,6 @@ This file defines all integration tests for the user profile update page
 - update all t no f
 - update 3 t but 1 f
 
-def test_r3_1_update_user():
-    '''
-      Testing R3-1: A user is only able to update his/her user name,
-      user email, billing address, and postal code.
-    '''
-    # add user to database
-    user = register('userr31', 'anemailr31@email.com', valid_password)
-    assert user is not None
-    new_name = "new " + user.username
-    new_email = "new" + user.email
-    new_address = "new" + user.ship_addr
-    new_postal_code = "A1A 1A1"
-    # update all posible fields
-    user.update_user(new_name, new_email, new_address, new_postal_code)
-
-    # confirm they were changed
-    user2 = login(new_email, valid_password)
-    assert user2.username == new_name
-    assert user2.email == new_email
-    assert user2.ship_addr == new_address
-    assert user2.postal_code == new_postal_code
-
-
-def test_r3_2_update_user():
-    '''
-      Testing R3-2: Postal code should be non-empty, alphanumeric-only,
-      and no special characters such as !.
-    '''
-    # confirm it works with valid postal code
-    user = register('userr32', 'anemailr32@email.com', valid_password)
-    new_postal_code = "A1A 1A1"
-    user.update_postal_code(new_postal_code)
-    assert user.update_postal_code(new_postal_code) is True
-    assert user.postal_code == new_postal_code
-    # can't be empty
-    new_postal_code = ""
-    assert user.update_postal_code(new_postal_code) is False
-    assert user.postal_code != new_postal_code
-    # alphanumeric only
-    new_postal_code = "A1A #A1"
-    assert user.update_postal_code(new_postal_code) is False
-    assert user.postal_code != new_postal_code
-
 
 def test_r3_3_update_user():
     '''
@@ -242,3 +199,65 @@ class FrontEndProfileUpdateTest(BaseCase):
         self.click('input[type="submit"]')
         self.assert_element('#message')
         self.assert_text(s_msg, '#message')
+
+
+    def test_r3_2_username_profile_update(self, *_):
+        '''
+        Testing R3-2: Postal code should be non-empty, alphanumeric-only,
+        and no special characters such as !.
+
+        Testing Method: Input Partitioning
+        '''
+
+        # Custom messages
+        e_msg = 'Invalid Input, Please Try Again!'
+        s_msg = 'Profile Updated!'
+
+        tmp_email = 'tmp.user@yahoo.com'
+        tmp_pass = 'tmp!USER123'
+        tmp_name = 'User'
+
+        # open register page
+        self.open(base_url + '/register')
+
+        # register
+        self.type('#email', tmp_email)
+        self.type('#name', tmp_name)
+        self.type('#password', tmp_pass)
+        self.type('#password2', tmp_pass)
+        self.click('input[type="submit"]')
+
+        # login
+        self.type('#email', tmp_email)
+        self.type('#password', tmp_pass)
+        self.click('input[type="submit"]')
+
+        # open profile_update page
+        self.open(base_url + '/profile_update')
+
+        # Case 1: Non-Empty
+        self.type('#postal_code', ' ')
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(e_msg, '#message')
+
+        # Case 2: AlphaNum Only
+        self.type('#postal_code', 'A1A #B1')
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(e_msg, '#message')
+
+        # Case 3: Valid Postal Code
+        self.type('#postal_code', 'A1A 1B1')
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(s_msg, '#message')
+
+
+    # def test_r3_3_username_profile_update(self, *_):
+    #     '''
+    #     Testing R3-2: Postal code should be non-empty, alphanumeric-only,
+    #     and no special characters such as !.
+    #
+    #     Testing Method: Input Partitioning
+    #     '''
