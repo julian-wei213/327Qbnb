@@ -1,5 +1,5 @@
 from seleniumbase import BaseCase
-# from selenium.webdriver.common.by import By
+import random
 from qbay_test.conftest import base_url
 from unittest.mock import patch
 from qbay.models import *
@@ -96,10 +96,39 @@ def test_r3_4_update_user():
 
 """
 
+def helper_generate_valid_canadian_postal_code():
+    '''
+    Helper Function: Generates a random valid Canadian postal code
+    '''
+    code = ""
+    code += random.choice(string.ascii_uppercase)
+    code += random.choice(string.digits)
+    code += random.choice(string.ascii_uppercase)
+    code += " "
+    code += random.choice(string.digits)
+    code += random.choice(string.ascii_uppercase)
+    code += random.choice(string.digits)
+    return code
+
+def helper_generate_invalid_canadian_postal_code():
+    '''
+    Helper Function: Generates a random invalid Canadian postal code
+    '''
+    str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()_+ []?><';:'"
+    code = ""
+    code += random.choice(str)
+    code += random.choice(str)
+    code += random.choice(str)
+    code += " "
+    code += random.choice(str)
+    code += random.choice(str)
+    code += random.choice(str)
+    return code
+
 
 class FrontEndProfileUpdateTest(BaseCase):
 
-    def test_r3_1_username_profile_update(self, *_):
+    def test_r3_1_profile_update(self, *_):
         '''
         Testing R3-1: A user is only able to update his/her user name,
          user email, billing address, and postal code.
@@ -201,7 +230,7 @@ class FrontEndProfileUpdateTest(BaseCase):
         self.assert_text(s_msg, '#message')
 
 
-    def test_r3_2_username_profile_update(self, *_):
+    def test_r3_2_profile_update(self, *_):
         '''
         Testing R3-2: Postal code should be non-empty, alphanumeric-only,
         and no special characters such as !.
@@ -254,10 +283,61 @@ class FrontEndProfileUpdateTest(BaseCase):
         self.assert_text(s_msg, '#message')
 
 
-    # def test_r3_3_username_profile_update(self, *_):
+    def test_r3_3_profile_update(self, *_):
+        '''
+        Testing R3-3: Postal code has to be a valid Canadian postal code.
+        Follow style A1A 1A1
+
+        Testing Method: Shotgun Testing
+        '''
+
+        # Custom messages
+        e_msg = 'Invalid Input, Please Try Again!'
+        s_msg = 'Profile Updated!'
+
+        tmp_email = 'tmp1.user@yahoo.com'
+        tmp_pass = 'tmp1!USER123'
+        tmp_name = 'User1'
+
+        # open register page
+        self.open(base_url + '/register')
+
+        # register
+        self.type('#email', tmp_email)
+        self.type('#name', tmp_name)
+        self.type('#password', tmp_pass)
+        self.type('#password2', tmp_pass)
+        self.click('input[type="submit"]')
+
+        # login
+        self.type('#email', tmp_email)
+        self.type('#password', tmp_pass)
+        self.click('input[type="submit"]')
+
+        # open profile_update page
+        self.open(base_url + '/profile_update')
+
+        # Shotgun test: valid input
+        for i in range(10):
+            s_code = helper_generate_valid_canadian_postal_code()
+            self.type('#postal_code', s_code)
+            self.click('input[type="submit"]')
+            self.assert_element('#message')
+            self.assert_text(s_msg, '#message')
+
+        # Shotgun test: invalid input
+        for i in range(10):
+            e_code = helper_generate_invalid_canadian_postal_code()
+            self.type('#postal_code', e_code)
+            self.click('input[type="submit"]')
+            self.assert_element('#message')
+            self.assert_text(e_msg, '#message')
+
+
+    # def test_r3_4_profile_update(self, *_):
     #     '''
-    #     Testing R3-2: Postal code should be non-empty, alphanumeric-only,
-    #     and no special characters such as !.
+    #     Testing R3-3: Postal code has to be a valid Canadian postal code.
+    #     Follow style A1A 1A1
     #
-    #     Testing Method: Input Partitioning
+    #     Testing Method: Shotgun Testing
     #     '''
