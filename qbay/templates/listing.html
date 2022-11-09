@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    td {
+        color: #aaa;
+        border: 1px solid #fff;
+        word-break: break-all;
+    }
+</style>
+<h1>{% block title %}User Listings{% endblock %}</h1>
+<h4 id='message'>{{message}}</h4>
+
+<table style="table-layout: fixed; width: 100%">
+    <col style="width:20%">
+	<col style="width:60%">
+	<col style="width:10%">
+    <col style="width:10%">
+
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for listing in listings %}
+        <tr>
+            <td>{{ listing.title }}</td>
+            <td>{{ listing.description }}</td>
+            <td>{{'%0.2f' % listing.price|float }}</td>
+            <td>
+                <a href="/listing/update/{{listing.id}}">Update</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href='/'>Home Page</a>
+{% endblock %}

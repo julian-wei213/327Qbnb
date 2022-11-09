@@ -1,38 +1,51 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    td {
+        color: #aaa;
+        border: 1px solid #fff;
+        word-break: break-all;
+    }
+</style>
 <h1>{% block title %}Update Listing{% endblock %}</h1>
 <h4 id='message'>{{message}}</h4>
 
-<table cellpadding="10" cellspacing="10">
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Price</th>
-    </tr>
-    {% for listing in listings %}
+<table style="table-layout: fixed; width: 100%">
+    <col style="width:25%">
+	<col style="width:65%">
+	<col style="width:10%">
+
+    <thead>
         <tr>
-            <td>{{ listing.id }}</td>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for listing in listing %}
+        <tr>
             <td>{{ listing.title }}</td>
             <td>{{ listing.description }}</td>
-            <td>{{ listing.price }}</td>
+            <td>{{'%0.2f' % listing.price|float }}</td>
         </tr>
     {% endfor %}
+    </tbody>
 </table>
 
 <form method="post">
   <div class="form-group">
-    <label for="title">PICK WHICH TO UPDATE USING ID</label>
-    <input class="form-control" name="id" id="id" required>
     <label for="title">Title</label>
-    <input class="form-control" name="title" id="title" required>
+    <input class="form-control" name="title" id="title">
     <label for="description">Description</label>
-    <input class="form-control" name="description" id="description" required>
+    <input class="form-control" name="description" id="description">
     <label for="price">Price</label>
-    <input class="form-control" type="number" name="price" id="price" min="10" max="10000" step="0.01" value="10.00" required>
+    <input class="form-control" type="number" name="price" id="price" min="10" max="10000" step="0.01" value="10.00">
     <input class="btn btn-lg btn-primary" type="submit" id="btn-submit" value="Update Listing">
   </div>
 </form>
-<a href='/'>Home Page</a>
+<a href='/listing'>Back to your Listings</a>
 {% endblock %}
