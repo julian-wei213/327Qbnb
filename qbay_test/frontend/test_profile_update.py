@@ -147,12 +147,12 @@ class FrontEndProfileUpdateTest(BaseCase):
         Testing R3-1: A user is only able to update his/her user name,
          user email, billing address, and postal code.
 
-        Testing Method:
+        Testing Method: Input Partitioning
         '''
 
         # Custom messages
-        err_msg = 'Invalid Input, Please Try Again!'
-        success_msg = 'Profile Updated!'
+        e_msg = 'Invalid Input, Please Try Again!'
+        s_msg = 'Profile Updated!'
 
         tmp_email = 'tmp.user@yahoo.com'
         tmp_pass = 'tmp!USER123'
@@ -176,8 +176,69 @@ class FrontEndProfileUpdateTest(BaseCase):
         # open profile_update page
         self.open(base_url + '/profile_update')
 
-        # TEST: change username
-        self.type('#name', 'newUser')
+        # Case 1: valid name
+        self.type('#name', 'new' + tmp_name)
         self.click('input[type="submit"]')
         self.assert_element('#message')
-        self.assert_text(success_msg, '#message')
+        self.assert_text(s_msg, '#message')
+
+        # Case 2: valid email
+        self.type('#email', 'new' + tmp_email)
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(s_msg, '#message')
+
+        # Case 3: valid address
+        self.type('#bill_addr', 'new address')
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(s_msg, '#message')
+
+        # Case 4: valid postal
+        self.type('#postal_code', 'B2B 2B2')
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(s_msg, '#message')
+
+        # Case 5: invalid name; valid email, address, postal
+        self.type('#name', ' invalid' + tmp_name) # Invalid Name
+        self.type('#email', 'new' + tmp_email)
+        self.type('#bill_addr', 'new address')
+        self.type('#postal_code', 'B2B 2B2')
+
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(e_msg, '#message')
+
+        # Case 6: invalid email; valid name, address, postal
+        self.type('#name', 'new' + tmp_name)
+        self.type('#email', ' invalid' + tmp_email) # Invalid Email
+        self.type('#bill_addr', 'new address')
+        self.type('#postal_code', 'B2B 2B2')
+
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(e_msg, '#message')
+
+        # Case 7: invalid address; valid name, email, postal
+        # There is no restriction for address, it can be literally anything (not testable)
+
+        # Case 8: invalid postal; valid name, email, address
+        self.type('#name', 'new' + tmp_name)
+        self.type('#email', ' invalid' + tmp_email)
+        self.type('#bill_addr', 'new address')
+        self.type('#postal_code', 'B2? 2B2') # Invalid Email
+
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(e_msg, '#message')
+
+        # Case 9: valid name, email, address, postal
+        self.type('#name', 'new' + tmp_name)
+        self.type('#email', 'new' + tmp_email)
+        self.type('#bill_addr', 'new address')
+        self.type('#postal_code', 'B2B 2B2')
+
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(s_msg, '#message')
