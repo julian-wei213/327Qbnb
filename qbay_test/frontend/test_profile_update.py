@@ -8,6 +8,7 @@ from qbay.models import *
 This file defines all integration tests for the user profile update page
 """
 
+
 def helper_generate_valid_canadian_postal_code():
     '''
     Helper Function: Generates a random valid Canadian postal code
@@ -22,11 +23,13 @@ def helper_generate_valid_canadian_postal_code():
     code += random.choice(string.digits)
     return code
 
+
 def helper_generate_invalid_canadian_postal_code():
     '''
     Helper Function: Generates a random invalid Canadian postal code
     '''
-    str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()_+ []?><';:'"
+    str = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklm"
+           "nopqrstuvwxyz1234567890!@#$%^&*()_+[]?><';:'")
     code = ""
     code += random.choice(str)
     code += random.choice(str)
@@ -99,7 +102,7 @@ class FrontEndProfileUpdateTest(BaseCase):
         self.assert_text(s_msg, '#message')
 
         # Case 5: invalid name; valid email, address, postal
-        self.type('#name', ' invalid' + tmp_name) # Invalid Name
+        self.type('#name', ' invalid' + tmp_name)  # Invalid Name
         self.type('#email', 'new' + tmp_email)
         self.type('#bill_addr', 'new address')
         self.type('#postal_code', 'B2B 2B2')
@@ -110,7 +113,7 @@ class FrontEndProfileUpdateTest(BaseCase):
 
         # Case 6: invalid email; valid name, address, postal
         self.type('#name', 'new' + tmp_name)
-        self.type('#email', ' invalid' + tmp_email) # Invalid Email
+        self.type('#email', ' invalid' + tmp_email)  # Invalid Email
         self.type('#bill_addr', 'new address')
         self.type('#postal_code', 'B2B 2B2')
 
@@ -119,13 +122,14 @@ class FrontEndProfileUpdateTest(BaseCase):
         self.assert_text(e_msg, '#message')
 
         # Case 7: invalid address; valid name, email, postal
-        # There is no restriction for address, it can be literally anything (not testable)
+        # There is no restriction for address, it can
+        # be literally anything (not testable)
 
         # Case 8: invalid postal; valid name, email, address
         self.type('#name', 'new' + tmp_name)
         self.type('#email', ' invalid' + tmp_email)
         self.type('#bill_addr', 'new address')
-        self.type('#postal_code', 'B2? 2B2') # Invalid Email
+        self.type('#postal_code', 'B2? 2B2')  # Invalid Email
 
         self.click('input[type="submit"]')
         self.assert_element('#message')
@@ -140,7 +144,6 @@ class FrontEndProfileUpdateTest(BaseCase):
         self.click('input[type="submit"]')
         self.assert_element('#message')
         self.assert_text(s_msg, '#message')
-
 
     def test_r3_2_profile_update(self, *_):
         '''
@@ -194,7 +197,6 @@ class FrontEndProfileUpdateTest(BaseCase):
         self.assert_element('#message')
         self.assert_text(s_msg, '#message')
 
-
     def test_r3_3_profile_update(self, *_):
         '''
         Testing R3-3: Postal code has to be a valid Canadian postal code.
@@ -244,7 +246,6 @@ class FrontEndProfileUpdateTest(BaseCase):
             self.click('input[type="submit"]')
             self.assert_element('#message')
             self.assert_text(e_msg, '#message')
-
 
     def test_r3_4_profile_update(self, *_):
         '''
