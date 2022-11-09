@@ -14,77 +14,170 @@ This file defines all integration tests for the user profile update page
 - update addr (t/f)
 - update all t no f
 - update 3 t but 1 f
+
+def test_r3_1_update_user():
+    '''
+      Testing R3-1: A user is only able to update his/her user name,
+      user email, billing address, and postal code.
+    '''
+    # add user to database
+    user = register('userr31', 'anemailr31@email.com', valid_password)
+    assert user is not None
+    new_name = "new " + user.username
+    new_email = "new" + user.email
+    new_address = "new" + user.ship_addr
+    new_postal_code = "A1A 1A1"
+    # update all posible fields
+    user.update_user(new_name, new_email, new_address, new_postal_code)
+
+    # confirm they were changed
+    user2 = login(new_email, valid_password)
+    assert user2.username == new_name
+    assert user2.email == new_email
+    assert user2.ship_addr == new_address
+    assert user2.postal_code == new_postal_code
+
+
+def test_r3_2_update_user():
+    '''
+      Testing R3-2: Postal code should be non-empty, alphanumeric-only,
+      and no special characters such as !.
+    '''
+    # confirm it works with valid postal code
+    user = register('userr32', 'anemailr32@email.com', valid_password)
+    new_postal_code = "A1A 1A1"
+    user.update_postal_code(new_postal_code)
+    assert user.update_postal_code(new_postal_code) is True
+    assert user.postal_code == new_postal_code
+    # can't be empty
+    new_postal_code = ""
+    assert user.update_postal_code(new_postal_code) is False
+    assert user.postal_code != new_postal_code
+    # alphanumeric only
+    new_postal_code = "A1A #A1"
+    assert user.update_postal_code(new_postal_code) is False
+    assert user.postal_code != new_postal_code
+
+
+def test_r3_3_update_user():
+    '''
+      Testing R3-3: Postal code has to be a valid Canadian postal code.
+      Follow style A1A 1A1
+    '''
+    # confirm works with valid canadian postal code
+    user = register('userr33', 'anemailr33@email.com', valid_password)
+    for i in range(100):
+        new_postal_code = generate_canadian_postal_code()
+        user.update_postal_code(new_postal_code)
+        assert user.update_postal_code(new_postal_code) is True
+        assert user.postal_code == new_postal_code
+    # doesn't work with non-valid code
+    new_postal_code = 'A1A A1A'
+    user.update_postal_code(new_postal_code)
+    assert user.update_postal_code(new_postal_code) is False
+    assert user.postal_code != new_postal_code
+    # example 2
+    new_postal_code = 'A1A1A1'
+    user.update_postal_code(new_postal_code)
+    assert user.update_postal_code(new_postal_code) is False
+    assert user.postal_code != new_postal_code
+
+
+def generate_canadian_postal_code():
+    '''
+    Generates a random Canadian postal code
+    '''
+    code = ""
+    code += random.choice(string.ascii_uppercase)
+    code += random.choice(string.digits)
+    code += random.choice(string.ascii_uppercase)
+    code += " "
+    code += random.choice(string.digits)
+    code += random.choice(string.ascii_uppercase)
+    code += random.choice(string.digits)
+    return code
+
+
+def test_r3_4_update_user():
+    '''
+      Testing R3-4: User name follows the requirements above.
+    '''
+    user = register('userr34', 'emailr34@email.com', valid_password)
+    # Confirm valid username is acceptable
+    new_name = "test namer34"
+    assert user.update_name(new_name) is True
+    assert user.username == new_name
+    # User name has to be non-empty
+    new_name = ""
+    assert user.update_name(new_name) is False
+    assert user.username != new_name
+    # alphanumeric-only
+    new_name = 'asd#f12!3'
+    assert user.update_name(new_name) is False
+    assert user.username != new_name
+    # space allowed only if it is not as the prefix or suffix.
+
+    # space in prefix should fail
+    new_name = ' asdf123'
+    assert user.update_name(new_name) is False
+    assert user.username != new_name
+    # space in suffix should fail
+    new_name = 'asdf123 '
+    assert user.update_name(new_name) is False
+    assert user.username != new_name
+    # longer than 2 characters and less than 20 characters.
+
+    # less than 3 should fail
+    new_name = '12'
+    assert user.update_name(new_name) is False
+    assert user.username != new_name
+    # greater than 19 should fail
+    new_name = ''.join(random.choice(string.ascii_letters) for i in range(20))
+    print(new_name)
+    assert user.update_name(new_name) is False
+    assert user.username != new_name
+
 """
 
-def register_test_user(self):
-    """
-    Comment
-    """
-    self.open(base_url + '/register')
-    self.type("#email", "user1@gmail.com")
-    self.type("#name", "user1")
-    self.type("#password", "123456")
-    self.type("#password2", "123456")
-    self.click('input[type="submit"]')
 
+class FrontEndProfileUpdateTest(BaseCase):
 
-def login_test_session(self):
-    """
-    Comment
-    """
-    self.open(base_url + '/login')
-    self.type("#email", "user1@gmail.com")
-    self.type("#password", "123456")
-    self.click('input[type="submit"]')
+    def test_r3_1_username_profile_update(self, *_):
+        '''
+        Testing R3-1: A user is only able to update his/her user name,
+         user email, billing address, and postal code.
 
+        Testing Method:
+        '''
 
-class UserUpdatePageTest(BaseCase):
-    """
-    Comment
-    """
+        # Custom messages
+        err_msg = 'Invalid Input, Please Try Again!'
+        success_msg = 'Profile Updated!'
 
-    def test_username_update_success(self, *_):
-        """
-        Comment
-        """
-        register_test_user(self)
-        login_test_session(self)
+        tmp_email = 'tmp.user@yahoo.com'
+        tmp_pass = 'tmp!USER123'
+        tmp_name = 'User'
 
-        self.open(base_url + '')
-        # self.assert_element('#update_profile')
-        # self.assert_text('auth', '#auth')
+        # open register page
+        self.open(base_url + '/register')
 
-        # self.open(base_url + 'profile_update')
-        # self.type("#name", "validusername")
-        # self.click('input[type="submit"]')
-        # self.assert_element("#message")
-        # self.assert_text("Profile Updated!", "#message")
+        # register
+        self.type('#email', tmp_email)
+        self.type('#name', tmp_name)
+        self.type('#password', tmp_pass)
+        self.type('#password2', tmp_pass)
+        self.click('input[type="submit"]')
 
-    # def test_login_success(self, *_):
-    #     """
-    #     This is a sample front end unit test to login to home page
-    #     and verify if the tickets are correctly listed.
-    #     """
-    #     # open login page
-    #     self.open(base_url + '/login')
-    #     # fill email and password
-    #     self.type("#email", "test0@test.com")
-    #     self.type("#password", "123456")
-    #     # click enter button
-    #     self.click('input[type="submit"]')
-    #
-    #     # after clicking on the browser (the line above)
-    #     # the front-end code is activated
-    #     # and tries to call get_user function.
-    #     # The get_user function is supposed to read data from database
-    #     # and return the value. However, here we only want to test the
-    #     # front-end, without running the backend logics.
-    #     # so we patch the backend to return a specific user instance,
-    #     # rather than running that program. (see @ annotations above)
-    #
-    #     # open home page
-    #     self.open(base_url)
-    #     # test if the page loads correctly
-    #     # self.assert_element("#welcome-header")
-    #     # self.assert_text("Welcome u0 !", "#welcome-header")
-    #     # other available APIs
+        # login
+        self.type('#email', tmp_email)
+        self.type('#password', tmp_pass)
+        self.click('input[type="submit"]')
+
+        # open profile_update page
+        self.open(base_url + '/profile_update')
+
+        # TEST: change username
+        self.type('#name', 'newUser')
+        self.click('input[type="submit"]')
+        self.assert_element('#message')
+        self.assert_text(success_msg, '#message')
