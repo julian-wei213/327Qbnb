@@ -17,6 +17,7 @@ Repo for CISC 327 group assignments.
 │   │   ├── create_listing.html
 │   │   ├── index.html
 │   │   ├── login.html
+│   │   ├── listing.html
 │   │   ├── profile_update.html
 │   │   ├── register.html
 │   │   └── update_listing.html
