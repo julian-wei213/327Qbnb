@@ -48,7 +48,7 @@ class FrontEndProfileUpdateTest(BaseCase):
         Testing R3-1: A user is only able to update his/her user name,
          user email, billing address, and postal code.
 
-        Testing Method: Input Partitioning
+        Testing Method: Requirement Based Testing
         '''
 
         # Custom messages
