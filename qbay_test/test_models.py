@@ -91,7 +91,7 @@ def generate_string(string_length):
 def test_r1_5_user_register():
     '''
     Testing R1-5: Username has to be non-empty, alpahnumerical,
-    and space allowed only as prefix/suffix
+    and space allowed only as non prefix/suffix
     '''
     # First assess that a username is valid based on the constraints
     assert register('u U0', 'anemail1@gmail.com', valid_password) is not None
