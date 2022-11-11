@@ -12,6 +12,28 @@ This file defines all integration tests for the frontend homepage.
 """
 
 
+def generate_string(string_length):
+    """
+    Helper method that generates a random string of string_length
+    """
+    generated = ""
+    for i in range(string_length):
+        # pick an upper or lower case character
+        letters = string.ascii_letters
+        rng = random.randint(0, 10)
+        # 10% of the time, pick a special character instead
+        if rng == 9:
+            letters = string.punctuation
+        # another 10% of time, pick whitespace instead
+        elif rng == 8:
+            letters = ' '
+        # another 10% of time, pick numbers instead
+        elif rng == 7:
+            letters = string.digits
+        generated += (random.choice(letters))
+    return generated
+
+
 class FrontEndRegistrationTest(BaseCase):
     valid_name = "username"
     invalid_name = '--coolKid#1--'
@@ -19,31 +41,10 @@ class FrontEndRegistrationTest(BaseCase):
     invalid_email = "eMaIl"
     valid_password = 'Abc#123'
     invalid_password = 'asdfghjkl'
-    login_page_title = 'Log In'
+    login_page_message = 'Please login'
     passwords_not_matching_message = 'The passwords do not match'
     e_message = 'Registration failed.'
     counter = 0
-
-    def generate_string(self, string_length):
-        """
-        Helper method that generates a random string of string_length
-        """
-        generated = ""
-        for i in range(string_length):
-            # pick an upper or lower case character
-            letters = string.ascii_letters
-            rng = random.randint(0, 10)
-            # 10% of the time, pick a special character instead
-            if rng == 9:
-                letters = string.punctuation
-            # another 10% of time, pick whitespace instead
-            elif rng == 8:
-                letters = ' '
-            # another 10% of time, pick numbers instead
-            elif rng == 7:
-                letters = string.digits
-            generated += (random.choice(letters))
-        return generated
 
     def test_r1_1_user_register(self, *_):
         '''
@@ -55,34 +56,34 @@ class FrontEndRegistrationTest(BaseCase):
         self.open(base_url + '/register')
 
         # register with empty email and empty password
-        self.type('#email', "")
+        self.type('#email', " ")
         self.type('#name', self.valid_name)
-        self.type('#password', "")
-        self.type('#password2', "")
+        self.type('#password', " ")
+        self.type('#password2', " ")
         self.click('input[type="submit"]')
         # assert user gets an error message
-        # self.assert_attribute('')
-        # self.assert_text(self.e_message, '#message')
+        self.assert_element('#message')
+        self.assert_text(self.e_message, '#message')
 
         # register with empty email, valid password
-        self.type('#email', "")
+        self.type('#email', " ")
         self.type('#name', self.valid_name)
         self.type('#password', self.valid_password)
         self.type('#password2', self.valid_password)
         self.click('input[type="submit"]')
         # assert user gets an error message
-        # self.assert_element('#message')
-        # self.assert_text(self.e_message, '#message')
+        self.assert_element('#message')
+        self.assert_text(self.e_message, '#message')
 
         # register with empty password, valid email
         self.type('#email', self.valid_email)
         self.type('#name', self.valid_name)
-        self.type('#password', '')
-        self.type('#password2', '')
+        self.type('#password', ' ')
+        self.type('#password2', ' ')
         self.click('input[type="submit"]')
         # assert user gets an error message
-        # self.assert_element('#message')
-        # self.assert_text(self.e_message, '#message')
+        self.assert_element('#message')
+        self.assert_text(self.e_message, '#message')
 
         # register with valid email and valid password
         self.counter += 1
@@ -93,7 +94,8 @@ class FrontEndRegistrationTest(BaseCase):
         self.click('input[type="submit"]')
 
         # assert we are now at the login page
-        self.assert_title(self.login_page_title)
+        self.assert_element('#message')
+        self.assert_text(self.login_page_message, '#message')
 
     def test_r1_2_user_register(self, *_):
         '''
@@ -108,6 +110,9 @@ class FrontEndRegistrationTest(BaseCase):
 
         Testing method: output partitioning
         '''
+        # selenium uses multiple instances of class to run tests
+        # have to preserve counter from previous tests
+        self.counter = 150
         # open register page
         self.open(base_url + '/register')
         # First register with an invalid email to show submiting fails
@@ -130,7 +135,8 @@ class FrontEndRegistrationTest(BaseCase):
         self.click('input[type="submit"]')
 
         # assert we are now at the login page
-        self.assert_title(self.login_page_title)
+        self.assert_element('#message')
+        self.assert_text(self.login_page_message, '#message')
 
     def test_r1_4_user_register(self, *_):
         '''
@@ -140,12 +146,15 @@ class FrontEndRegistrationTest(BaseCase):
 
         Testing method: shotgun testing
         '''
+        # selenium uses multiple instances of class to run tests
+        # have to preserve counter from previous tests
+        self.counter = 300
         # open register page
         self.open(base_url + '/register')
         # attempt 100 different passwords
         for i in range(100):
             string_length = random.randint(4, 10)
-            test_string = self.generate_string(string_length)
+            test_string = generate_string(string_length)
             # if password is valid
             if (len(test_string) >= 6 and check_str_contains_lower(test_string)
                 and check_str_contains_upper(test_string)
@@ -157,7 +166,8 @@ class FrontEndRegistrationTest(BaseCase):
                 self.type('#password2', test_string)
                 self.click('input[type="submit"]')
                 # assert we are now at the login page
-                self.assert_title(self.login_page_title)
+                self.assert_element('#message')
+                self.assert_text(self.login_page_message, '#message')
                 # return to register page for next test
                 self.open(base_url + '/register')
             # if password wasn't valid
@@ -179,12 +189,15 @@ class FrontEndRegistrationTest(BaseCase):
 
         Testing method: Shotgun testing
         '''
+        # selenium uses multiple instances of class to run tests
+        # have to preserve counter from previous tests
+        self.counter = 500
         # open register page
         self.open(base_url + '/register')
         # attempt 100 different usernames
         for i in range(100):
-            string_length = random.randint(1, 6)
-            test_string = self.generate_string(string_length)
+            string_length = random.randint(3, 9)
+            test_string = generate_string(string_length)
 
             # if username is valid
             name_validation = re.compile('^(?! )[A-Za-z0-9 ]*(?<! )$')
@@ -196,7 +209,8 @@ class FrontEndRegistrationTest(BaseCase):
                 self.type('#password2', self.valid_password)
                 self.click('input[type="submit"]')
                 # assert we are now at the login page
-                self.assert_title(self.login_page_title)
+                self.assert_element('#message')
+                self.assert_text(self.login_page_message, '#message')
                 # return to register page for next test
                 self.open(base_url + '/register')
             # if password wasn't valid
@@ -217,6 +231,11 @@ class FrontEndRegistrationTest(BaseCase):
 
         Testing method: input boundary testing
         '''
+        # selenium uses multiple instances of class to run tests
+        # have to preserve counter from previous tests
+        self.counter = 700
+        # open register page
+        self.open(base_url + '/register')
         # 3 character username
         self.counter += 1
         self.type('#email', str(self.counter) + self.valid_email)
@@ -225,7 +244,8 @@ class FrontEndRegistrationTest(BaseCase):
         self.type('#password2', self.valid_password)
         self.click('input[type="submit"]')
         # assert we are now at the login page
-        self.assert_title(self.login_page_title)
+        self.assert_element('#message')
+        self.assert_text(self.login_page_message, '#message')
         # return to register page for next test
         self.open(base_url + '/register')
 
@@ -248,7 +268,8 @@ class FrontEndRegistrationTest(BaseCase):
         self.type('#password2', self.valid_password)
         self.click('input[type="submit"]')
         # assert we are now at the login page
-        self.assert_title(self.login_page_title)
+        self.assert_element('#message')
+        self.assert_text(self.login_page_message, '#message')
         # return to register page for next test
         self.open(base_url + '/register')
 
@@ -269,6 +290,11 @@ class FrontEndRegistrationTest(BaseCase):
 
         Testing method: input partitioning
         '''
+        # selenium uses multiple instances of class to run tests
+        # have to preserve counter from previous tests
+        self.counter = 900
+        # open register page
+        self.open(base_url + '/register')
         # register first user
         self.counter += 1
         self.type('#email', str(self.counter) + self.valid_email)
@@ -277,7 +303,8 @@ class FrontEndRegistrationTest(BaseCase):
         self.type('#password2', self.valid_password)
         self.click('input[type="submit"]')
         # assert we are now at the login page
-        self.assert_title(self.login_page_title)
+        self.assert_element('#message')
+        self.assert_text(self.login_page_message, '#message')
         # return to register page for next test
         self.open(base_url + '/register')
 
@@ -294,9 +321,13 @@ class FrontEndRegistrationTest(BaseCase):
         # prove it works if they just change email
         self.counter += 1
         self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#name', self.valid_name)
+        self.type('#password', self.valid_password)
+        self.type('#password2', self.valid_password)
         self.click('input[type="submit"]')
         # assert we are now at the login page
-        self.assert_title(self.login_page_title)
+        self.assert_element('#message')
+        self.assert_text(self.login_page_message, '#message')
 
     def test_r1_8_user_register(self, *_):
         '''
