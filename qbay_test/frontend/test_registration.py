@@ -4,8 +4,7 @@ import re
 from seleniumbase import BaseCase
 
 from qbay_test.conftest import base_url
-from unittest.mock import patch
-from qbay.models import User, check_str_contains_lower, \
+from qbay.models import check_str_contains_lower, \
     check_str_contains_special, check_str_contains_upper
 
 """
@@ -61,7 +60,7 @@ class FrontEndRegistrationTest(BaseCase):
         self.type('#password', "")
         self.type('#password2', "")
         self.click('input[type="submit"]')
-        # assert user gets an error message        
+        # assert user gets an error message
         # self.assert_attribute('')
         # self.assert_text(self.e_message, '#message')
 
@@ -71,7 +70,7 @@ class FrontEndRegistrationTest(BaseCase):
         self.type('#password', self.valid_password)
         self.type('#password2', self.valid_password)
         self.click('input[type="submit"]')
-        # assert user gets an error message        
+        # assert user gets an error message
         # self.assert_element('#message')
         # self.assert_text(self.e_message, '#message')
 
@@ -81,28 +80,27 @@ class FrontEndRegistrationTest(BaseCase):
         self.type('#password', '')
         self.type('#password2', '')
         self.click('input[type="submit"]')
-        # assert user gets an error message        
+        # assert user gets an error message
         # self.assert_element('#message')
         # self.assert_text(self.e_message, '#message')
 
-        # register with valid email and valid password 
+        # register with valid email and valid password
         self.counter += 1
         self.type('#email', str(self.counter) + self.valid_email)
         self.type('#name', self.valid_name)
         self.type('#password', self.valid_password)
         self.type('#password2', self.valid_password)
         self.click('input[type="submit"]')
-        
+
         # assert we are now at the login page
         self.assert_title(self.login_page_title)
 
     def test_r1_2_user_register(self, *_):
-          '''
-          Testing R1-2: A user is uniquely identified by their id
+        '''
+        Testing R1-2: A user is uniquely identified by their id
 
-          Testing method: Can't be tested in frontend
-          '''
-
+        Testing method: Can't be tested in frontend
+        '''
 
     def test_r1_3_user_register(self, *_):
         '''
@@ -119,7 +117,7 @@ class FrontEndRegistrationTest(BaseCase):
         self.type('#password2', self.valid_password)
         self.click('input[type="submit"]')
 
-        # assert user gets an error message        
+        # assert user gets an error message
         self.assert_element('#message')
         self.assert_text(self.e_message, '#message')
 
@@ -130,10 +128,9 @@ class FrontEndRegistrationTest(BaseCase):
         self.type('#password', self.valid_password)
         self.type('#password2', self.valid_password)
         self.click('input[type="submit"]')
-        
+
         # assert we are now at the login page
         self.assert_title(self.login_page_title)
-
 
     def test_r1_4_user_register(self, *_):
         '''
@@ -163,7 +160,7 @@ class FrontEndRegistrationTest(BaseCase):
                 self.assert_title(self.login_page_title)
                 # return to register page for next test
                 self.open(base_url + '/register')
-            # if password wasn't valid 
+            # if password wasn't valid
             else:
                 self.counter += 1
                 self.type('#email', str(self.counter) + self.valid_email)
@@ -191,7 +188,7 @@ class FrontEndRegistrationTest(BaseCase):
 
             # if username is valid
             name_validation = re.compile('^(?! )[A-Za-z0-9 ]*(?<! )$')
-            if string_length > 0 and re.fullmatch(name_validation, test_string):
+            if re.fullmatch(name_validation, test_string):
                 self.counter += 1
                 self.type('#email', str(self.counter) + self.valid_email)
                 self.type('#name', test_string)
@@ -202,7 +199,7 @@ class FrontEndRegistrationTest(BaseCase):
                 self.assert_title(self.login_page_title)
                 # return to register page for next test
                 self.open(base_url + '/register')
-            # if password wasn't valid 
+            # if password wasn't valid
             else:
                 self.counter += 1
                 self.type('#email', str(self.counter) + self.valid_email)
@@ -213,7 +210,6 @@ class FrontEndRegistrationTest(BaseCase):
                 # assert user gets an error message
                 self.assert_element('#message')
                 self.assert_text(self.e_message, '#message')
-
 
     def test_r1_6_user_register(self, *_):
         '''
@@ -267,14 +263,13 @@ class FrontEndRegistrationTest(BaseCase):
         self.assert_element('#message')
         self.assert_text(self.e_message, '#message')
 
-
     def test_r1_7_user_register(self, *_):
         '''
         Testing R1-7: If the email has been used, the operation failed.
 
         Testing method: input partitioning
         '''
-        # register first user  
+        # register first user
         self.counter += 1
         self.type('#email', str(self.counter) + self.valid_email)
         self.type('#name', self.valid_name)
@@ -310,14 +305,12 @@ class FrontEndRegistrationTest(BaseCase):
         Testing method: can't be tested in frontend
         '''
 
-
     def test_r1_9_user_register(self, *_):
         '''
         Testing R1-9: Postal Code is empty at the time of registration
 
         Testing method: can't be tested in frontend
         '''
-
 
     def test_r1_10_user_register(self, *_):
         '''
