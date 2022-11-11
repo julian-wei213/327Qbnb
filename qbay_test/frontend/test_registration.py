@@ -36,13 +36,10 @@ def generate_string(string_length):
 
 class FrontEndRegistrationTest(BaseCase):
     valid_name = "username"
-    invalid_name = '--coolKid#1--'
     valid_email = "x@email.com"
     invalid_email = "eMaIl"
     valid_password = 'Abc#123'
-    invalid_password = 'asdfghjkl'
     login_page_message = 'Please login'
-    passwords_not_matching_message = 'The passwords do not match'
     e_message = 'Registration failed.'
     counter = 0
 
