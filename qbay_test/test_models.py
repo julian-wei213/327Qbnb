@@ -584,6 +584,7 @@ def test_r4_8_create_listing():
                              30.00, date(2021, 1, 3), user.id)
     assert listing is not None
 
+
 def test_create_listing_SQL_injection_param_1():
     '''
     Fuzzy testing for Create Listing param 1
@@ -596,12 +597,13 @@ def test_create_listing_SQL_injection_param_1():
         for line in f.readlines():
             try:
                 create_listing(line, 'description of listing',
-                             30.00, date(2021, 1, 3), user.id)
-            except:
+                               30.00, date(2021, 1, 3), user.id)
+            except Exception:
                 # Test has failed
                 assert False
             
     assert True
+    
     
 def test_create_listing_SQL_injection_param_2():
     '''
@@ -616,13 +618,14 @@ def test_create_listing_SQL_injection_param_2():
         for line in f.readlines():
             try:
                 create_listing('fuzzy' + str(count), line,
-                                30.00, date(2021, 1, 3), user.id)
-            except:
+                               30.00, date(2021, 1, 3), user.id)
+            except Exception:
                 # Test has failed
                 assert False
             count += 1
             
     assert True
+
 
 def test_r5_1_update_listing():
     '''
