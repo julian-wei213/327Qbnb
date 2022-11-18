@@ -345,12 +345,18 @@ def create_listing(title: str, description: str, price: float,
         return None
 
     # Satisfy R4-5
-    if price < 10 or price > 10000:
+    if isinstance(price, float) or isinstance(price, int):
+        if price < 10 or price > 10000:
+            return None
+    else:
         return None
 
     # Satisfy R4-6
-    if last_modified_date <= date(2021, 1, 2) or \
-       last_modified_date >= date(2025, 1, 2):
+    if isinstance(last_modified_date, date):
+        if last_modified_date <= date(2021, 1, 2) or \
+        last_modified_date >= date(2025, 1, 2):
+            return None
+    else:
         return None
 
     # Satisfy R4-7
