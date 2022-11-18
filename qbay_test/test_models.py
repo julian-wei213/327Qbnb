@@ -162,6 +162,63 @@ def test_r1_10_user_register():
     assert user.balance == 100.0
 
 
+def test_user_register_fuzzy_test_param_1():
+    '''
+    Fuzzy testing for register() param 1
+
+    Test fails if there exists a payload that causes an exception
+    '''
+    email = "fuzzyemail1@email.com"
+    counter = 0
+
+    with open('qbay_test/Generic_SQLI.txt') as f:
+        for line in f.readlines():
+            try:
+                register(line, str(counter) + email, valid_password)
+            except Exception:
+                # Test has failed
+                assert False
+    assert True
+
+
+def test_user_register_fuzzy_test_param_2():
+    '''
+    Fuzzy testing for register() param 2
+
+    Test fails if there exists a payload that causes an exception
+    (Note: this test takes a while)
+    '''
+
+    with open('qbay_test/Generic_SQLI.txt') as f:
+        for line in f.readlines():
+            print(line)
+            try:
+                register("username", line, valid_password)
+            except Exception:
+                # Test has failed
+                assert False
+    assert True
+
+
+def test_user_register_fuzzy_test_param_3():
+    '''
+    Fuzzy testing for register() param 3
+
+    Test fails if there exists a payload that causes an exception
+    '''
+    email = "fuzzyemail3@email.com"
+    counter = 0
+
+    with open('qbay_test/Generic_SQLI.txt') as f:
+        for line in f.readlines():
+            try:
+                register("username", str(counter) + email, line)
+            except Exception:
+                # Test has failed
+                assert False
+    assert True
+
+
 def test_r2_1_login():
     '''
     Testing R2-1: A user can log in using her/his email address
