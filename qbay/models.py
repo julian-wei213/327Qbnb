@@ -354,7 +354,7 @@ def create_listing(title: str, description: str, price: float,
     # Satisfy R4-6
     if isinstance(last_modified_date, date):
         if last_modified_date <= date(2021, 1, 2) or \
-        last_modified_date >= date(2025, 1, 2):
+           last_modified_date >= date(2025, 1, 2):
             return None
     else:
         return None
