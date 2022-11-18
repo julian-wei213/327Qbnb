@@ -585,6 +585,118 @@ def test_r4_8_create_listing():
     assert listing is not None
 
 
+def test_payload_create_listing_parameter_3():
+    """
+    Fuzzy Testing param 3:
+
+    Can't test as parameter 3 price needs a float input, will always
+    output ValueError for all payloads that do not represent a float
+
+    Test that ValueError does occur
+    """
+
+    # Get user object
+    user = User.query.filter_by().first()
+
+    # Setup variables
+    count = 0
+    error = False
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+        for line in f:
+            try:
+                # Try creating listing
+                create_listing("param3" + str(count),
+                               "This is a description here", 
+                               float(line), date(2022, 3, 4), user.id)
+            except ValueError:
+                # Variable check that ValueError
+                # does indeed occur in 'Generic_SQLI.txt'
+                error = True
+                assert True
+            
+            count += 1
+
+    # Check error does occur
+    if error:
+        assert True
+    else:
+        assert False
+
+
+def test_payload_create_listing_parameter_4():
+    """
+    Fuzzy Testing param 4:
+
+    Can't test as parameter 4 date needs a date input, will always
+    output TypeError for all payloads that use a str input
+
+    Test that TypeError does occur
+    """
+
+    # Get user object
+    user = User.query.filter_by().first()
+
+    # Setup variables
+    count = 0
+    error = False
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+        for line in f:
+            try:
+                # Try creating listing
+                create_listing("param4" + str(count),
+                               "This is a description here", 
+                               30.00, line, user.id)
+            except TypeError:
+                # Variable check that TypeError
+                # does indeed occur in 'Generic_SQLI.txt'
+                error = True
+                assert True
+            
+            count += 1
+
+    # Check error does occur
+    if error:
+        assert True
+    else:
+        assert False
+
+
+def test_payload_create_listing_parameter_5():
+    """
+    Fuzzy Testing param 5 owner_id:
+
+    Test fail with exception
+    """
+
+    # Get user object
+    user = User.query.filter_by().first()
+
+    # Setup variables
+    count = 0
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+        for line in f:
+            try:
+                # Try creating listing
+                create_listing("param5" + str(count),
+                               "This is a description here", 
+                               30.00, date(2022, 3, 4), line)
+            except Exception:
+                # Exception test fails
+                assert False
+            
+            # Workaround for unique titles
+            count += 1
+
+    # No exceptions
+    assert True
+
+
 def test_r5_1_update_listing():
     '''
     Testing R5-1: One can update all attributes of the listing,
