@@ -739,6 +739,9 @@ def test_payload_create_listing_parameter_5():
             count += 1
 
     # No exceptions
+    assert True
+
+    
 def test_create_listing_SQL_injection_param_1():
     '''
     Fuzzy testing for Create Listing param 1
