@@ -44,3 +44,16 @@ Repo for CISC 327 group assignments.
 ├── sprint4_progress.md
 └── sprint4_progress.png
 ```
+
+#  **Docker Run Commands**
+
+To run the web-app
+```
+docker pull lobus/scrum_bucket_qbay:latest
+docker run -p 8081:8081 lobus/scrum_bucket_qbay:latest python3 -m qbay
+```
+
+To run the entire system:
+```
+docker-compose up
+```
