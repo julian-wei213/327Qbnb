@@ -644,6 +644,104 @@ def test_r4_8_create_listing():
     assert listing is not None
 
 
+def test_payload_create_listing_parameter_3():
+    """
+    Fuzzy Testing param 3: Price
+
+    Upon exception on any payload the test fails
+    """
+
+    # Get user object
+    user = User.query.filter_by().first()
+
+    # Variable to make unique title
+    count = 0
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+
+        # Get each line
+        for line in f:
+            try:
+                # Try creating listing
+                create_listing("param3" + str(count),
+                               "This is a description here", 
+                               line, date(2022, 3, 4), user.id)
+            except Exception:
+                # There is an exception test fails
+                assert False
+            
+            count += 1
+
+    # Test passed all payloads
+    assert True
+
+
+def test_payload_create_listing_parameter_4():
+    """
+    Fuzzy Testing param 4: last_modified_date
+
+    Upon exception on any payload the test fails
+    """
+
+    # Get user object
+    user = User.query.filter_by().first()
+
+    # Variable to make unique title
+    count = 0
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+
+        # Get each line
+        for line in f:
+            try:
+                # Try creating listing
+                create_listing("param4" + str(count),
+                               "This is a description here", 
+                               30.00, line, user.id)
+            except Exception:
+                # There is an exception test fails
+                assert False
+            
+            count += 1
+
+    # All payloads passed successfully
+    assert True
+
+
+def test_payload_create_listing_parameter_5():
+    """
+    Fuzzy Testing param 5: owner_id
+
+    Test fail with exception
+    """
+
+    # Get user object
+    user = User.query.filter_by().first()
+
+    # Setup variables
+    count = 0
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+        for line in f:
+            try:
+                # Try creating listing
+                create_listing("param5" + str(count),
+                               "This is a description here", 
+                               30.00, date(2022, 3, 4), line)
+            except Exception:
+                # Exception test fails
+                assert False
+            
+            # Workaround for unique titles
+            count += 1
+
+    # No exceptions
+    assert True
+
+    
 def test_create_listing_SQL_injection_param_1():
     '''
     Fuzzy testing for Create Listing param 1
