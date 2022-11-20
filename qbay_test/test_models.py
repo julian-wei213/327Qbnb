@@ -192,7 +192,6 @@ def test_user_register_fuzzy_test_param_2():
 
     with open('qbay_test/Generic_SQLI.txt') as f:
         for line in f.readlines():
-            print(line)
             try:
                 register("username", line, valid_password)
             except Exception:
