@@ -1,7 +1,7 @@
-ersion: "2"
+version: "2"
 services:
   qbay-web:
-    image: your_docker_hub_name/your_docker_hub_repo_name:version_info
+    image: lobus/scrum_bucket_qbay:latest
     depends_on:
       - qbay-db
     links:
