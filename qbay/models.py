@@ -200,6 +200,7 @@ class Booking(db.Model):
     def __repr__(self):
         return '<Booking %r>' % self.id
     
+    
 def create_booking(user_id: int, listing_id: int, price: float,
                    start_date: date, end_date: date):
     pass
