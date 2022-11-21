@@ -184,17 +184,25 @@ class Booking(db.Model):
         user_id (Integer):         user id
         listing_id (Integer)       listing id
         price (Float)              price of listing
-        date (Date)                date of upload
+        booking_date (Date)        date of booking
+        start_date (Date)          start date of stay
+        end_date (Date)            end date of stay
     '''
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     listing_id = db.Column(db.Integer, db.ForeignKey('listing.id'),
                            nullable=False)
     price = db.Column(db.Float(2, True), nullable=False)
-    date = db.Column(db.Date, default=date.today())
+    booking_date = db.Column(db.Date, default=date.today())
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
 
     def __repr__(self):
         return '<Booking %r>' % self.id
+    
+def create_booking(user_id: int, listing_id: int, price: float,
+                   start_date: date, end_date: date):
+    pass
 
 
 # create all tables
