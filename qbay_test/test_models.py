@@ -187,7 +187,6 @@ def test_user_register_fuzzy_test_param_2():
     Fuzzy testing for register() param 2
 
     Test fails if there exists a payload that causes an exception
-    (Note: this test takes a while)
     '''
 
     with open('qbay_test/Generic_SQLI.txt') as f:
