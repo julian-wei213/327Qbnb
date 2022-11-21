@@ -407,6 +407,10 @@ def register(name, email, password):
     # new unique id for each new User
 
     # R1-3 The email has to follow addr-spec defined in RFC 5322
+    # initial simple check
+    if ("@" not in email):
+        return None
+    # thorough check
     email_val = re.compile(
         r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(.[A-Z|a-z]{2,})+')
     if not re.fullmatch(email_val, email):
