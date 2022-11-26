@@ -955,6 +955,8 @@ def test_r5_4_update_listing():
 def test_booking_backend_1():
     """
     A user can book a listing
+
+    Testing method: partition testing
     """
 
     # Create some users
@@ -1012,6 +1014,8 @@ def test_booking_backend_1():
 def test_booking_backend_2():
     """
     A user cannot book a listing for his/her listing
+
+    Testing method: partition testing
     """
 
     # Create some users
@@ -1083,6 +1087,8 @@ def test_booking_backend_2():
 def test_booking_backend_3():
     """
     A user cannot book a listing that costs more than his/her balance
+
+    Testing method: boundary testing
     """
 
     # Create some users
@@ -1158,6 +1164,8 @@ def test_booking_backend_4():
     """
     A user cannot book a listing that is already booked with
     the overlapped dates
+
+    Testing method: partition testing
     """
 
     # Create some users
