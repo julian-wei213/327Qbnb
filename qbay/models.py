@@ -183,7 +183,6 @@ class Booking(db.Model):
         id (Integer):              booking id
         user_id (Integer):         user id
         listing_id (Integer)       listing id
-        price (Float)              price of listing
         booking_date (Date)        date of booking
         start_date (Date)          start date of stay
         end_date (Date)            end date of stay
@@ -192,7 +191,6 @@ class Booking(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     listing_id = db.Column(db.Integer, db.ForeignKey('listing.id'),
                            nullable=False)
-    price = db.Column(db.Float(2, True), nullable=False)
     booking_date = db.Column(db.Date, default=date.today())
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
@@ -201,10 +199,80 @@ class Booking(db.Model):
         return '<Booking %r>' % self.id
     
     
-def create_booking(user_id: int, listing_id: int, price: float,
+def create_booking(user_id: int, listing_id: int, 
                    start_date: date, end_date: date):
-    pass
+    '''
+    Creates a booking
+      Attributes:
+        user_id (int)          user id
+        listing_id (int):      listing id
+        start_date (date):     start date of stay
+        end_date (date):       end date of stay
+      Returns:
+        The booking object if succeeded otherwise None
+    '''
 
+    # Check types
+    if not isinstance(user_id, int):
+        return None
+    
+    if not isinstance(listing_id, int):
+        return None
+    
+    if not isinstance(start_date, date):
+        return None
+    
+    if not isinstance(end_date, date):
+        return None
+    
+    # start_date must be before end_date
+    if start_date > end_date:
+        return None
+    
+    listing = Listing.query.filter_by(id=listing_id).first()
+    
+    # listing does not exist
+    if listing is None:
+        return None
+    
+    # cannot book for user's own listing
+    if user_id == listing.owner_id:
+        return None
+    
+    user = User.query.filter_by(id=user_id).first()
+    
+    # user does not exist
+    if user is None:
+        return None
+    
+    # user is too poor
+    if listing.price > user.balance:
+        return None
+    
+    bookings = Booking.query.filter_by(listing_id=listing_id).all()
+    
+    # check for date overlaps
+    for book in bookings:
+        if start_date >= book.start_date and \
+           start_date <= book.end_date:
+            return None
+        
+        if end_date >= book.start_date and \
+           end_date <= book.end_date:
+            return None
+    
+    # create booking object
+    booking = Booking(user_id=user_id, listing_id=listing_id, 
+                      booking_date=date.today(), start_date=start_date,
+                      end_date=end_date)
+    
+    # add it to the current database session
+    db.session.add(booking)
+    # actually save the user object
+    db.session.commit()
+
+    return booking
+    
 
 # create all tables
 db.create_all()
