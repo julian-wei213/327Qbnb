@@ -1,7 +1,7 @@
 from qbay.models import register, login, check_str_contains_lower, \
     check_str_contains_upper, check_str_contains_special, update_listing, \
     User, Listing, create_listing, create_booking
-from datetime import date
+from datetime import date, timedelta
 
 import string
 import random
@@ -1263,3 +1263,139 @@ def test_booking_backend_4():
                                end_date=date(2022, 9, 8))
 
     assert booking10 is not None
+
+
+def test_payload_create_booking_parameter_1():
+    """
+    Fuzzy Testing param 1: user_id
+
+    Test fail with exception
+    """
+    user = register("slugcat1", "slugcat1@slug.ca", "abcDEF123!")
+    listing = create_listing("slughouse1", "house of slug wowowow",
+                             30.00, date(2022, 11, 26), user.id)
+    
+    # Setup variables
+    count = 0
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+        start_date = date(2023, 1, 1)
+        end_date = date(2023, 1, 2)
+        for line in f:
+            try:
+                # Try creating booking
+                create_booking(line, listing.id,
+                               start_date,
+                               end_date)
+            except Exception:
+                # Exception test fails
+                assert False
+            
+            # Avoid booking overlap
+            start_date += timedelta(days=2)
+            end_date += timedelta(days=2)
+
+    # No exceptions
+    assert True
+
+
+def test_payload_create_booking_parameter_2():
+    """
+    Fuzzy Testing param 2: listing_id
+
+    Test fail with exception
+    """
+    user = register("slugcat2", "slugcat2@slug.ca", "abcDEF123!")
+    listing = create_listing("slughouse2", "house of slug wowowow",
+                             30.00, date(2022, 11, 26), user.id)
+    
+    # Setup variables
+    count = 0
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+        start_date = date(2023, 1, 1)
+        end_date = date(2023, 1, 2)
+        for line in f:
+            try:
+                # Try creating booking
+                create_booking(user.id, line,
+                               start_date,
+                               end_date)
+            except Exception:
+                # Exception test fails
+                assert False
+            
+            # Avoid booking overlap
+            start_date += timedelta(days=2)
+            end_date += timedelta(days=2)
+
+    # No exceptions
+    assert True
+
+
+def test_payload_create_booking_parameter_3():
+    """
+    Fuzzy Testing param 3: start_date
+
+    Test fail with exception
+    """
+    user = register("slugcat3", "slugcat3@slug.ca", "abcDEF123!")
+    listing = create_listing("slughouse3", "house of slug wowowow",
+                             30.00, date(2022, 11, 26), user.id)
+    
+    # Setup variables
+    count = 0
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+        end_date = date(2023, 1, 2)
+        for line in f:
+            try:
+                # Try creating booking
+                create_booking(user.id, listing.id,
+                               line,
+                               end_date)
+            except Exception:
+                # Exception test fails
+                assert False
+            
+            # Avoid booking overlap
+            end_date += timedelta(days=2)
+
+    # No exceptions
+    assert True
+    
+
+def test_payload_create_booking_parameter_4():
+    """
+    Fuzzy Testing param 4: end_date
+
+    Test fail with exception
+    """
+    user = register("slugcat4", "slugcat4@slug.ca", "abcDEF123!")
+    listing = create_listing("slughouse4", "house of slug wowowow",
+                             30.00, date(2022, 11, 26), user.id)
+    
+    # Setup variables
+    count = 0
+
+    # Open file
+    with open('qbay_test/Generic_SQLI.txt', "r") as f:
+        start_date = date(2023, 1, 1)
+        for line in f:
+            try:
+                # Try creating booking
+                create_booking(user.id, listing.id,
+                               start_date,
+                               line)
+            except Exception:
+                # Exception test fails
+                assert False
+            
+            # Avoid booking overlap
+            start_date += timedelta(days=2)
+
+    # No exceptions
+    assert True
