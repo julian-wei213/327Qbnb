@@ -1,6 +1,6 @@
 from qbay.models import register, login, check_str_contains_lower, \
     check_str_contains_upper, check_str_contains_special, update_listing, \
-    User, Listing, create_listing
+    User, Listing, create_listing, create_booking
 from datetime import date
 
 import string
@@ -950,3 +950,316 @@ def test_r5_4_update_listing():
 
     # Different title case
     assert update_listing(listing2, title="Thishere") is not None
+
+
+def test_booking_backend_1():
+    """
+    A user can book a listing
+
+    Testing method: partition testing
+    """
+
+    # Create some users
+    user1 = register(name="bookingbackend1a",
+                     email="bookingbackend1a@email.com",
+                     password="Password21$")
+    user2 = register(name="bookingbackend1b",
+                     email="bookingbackend1b@email.com",
+                     password="Password21$")
+
+    # Set user balance
+    user1.balance = 10000.00
+    user2.balance = 10000.00
+    
+    # Create some listings
+    listing0 = Listing.query.filter_by().first()
+    listing1 = create_listing(
+        "bookingbackend1b", 
+        "This is a lot of descriptions and it is about a house",
+        200.00, date.today(), user1.id)
+    listing2 = create_listing(
+        "bookingbackend1c",
+        "This is a lot of descriptions and it is about a house",
+        100.00, date.today(), user2.id)
+
+    # User1 creating booking on user2's listing
+    booking1 = create_booking(user1.id, listing2.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 2, 2))
+
+    assert booking1 is not None
+
+    # User2 creating booking on user1's listing
+    booking2 = create_booking(user2.id, listing1.id,
+                              start_date=date(2022, 2, 3),
+                              end_date=date(2022, 2, 4))
+
+    assert booking2 is not None
+
+    # User1 creating booking on some other user's listing
+    booking3 = create_booking(user1.id, listing0.id,
+                              start_date=date(2021, 2, 1),
+                              end_date=date(2021, 2, 2))
+
+    assert booking3 is not None
+
+    # User2 creating booking on some other user's listing
+    booking4 = create_booking(user2.id, listing0.id,
+                              start_date=date(2021, 2, 3),
+                              end_date=date(2021, 2, 4))
+
+    assert booking4 is not None
+
+
+def test_booking_backend_2():
+    """
+    A user cannot book a listing for his/her listing
+
+    Testing method: partition testing
+    """
+
+    # Create some users
+    user1 = register(name="bookingbackend2a",
+                     email="bookingbackend2a@email.com",
+                     password="Password21$")
+    user2 = register(name="bookingbackend2b",
+                     email="bookingbackend2b@email.com",
+                     password="Password21$")
+
+    # Set user balances
+    user1.balance = 10000.00
+    user2.balance = 10000.00
+
+    # Create some listings
+    listing0 = Listing.query.filter_by().first()
+    listing1 = create_listing(
+        "bookingbackend2b", 
+        "This is a lot of descriptions and it is about a house",
+        100.00, date.today(), user1.id)
+    listing2 = create_listing(
+        "bookingbackend2c",
+        "This is a lot of descriptions and it is about a house",
+        100.00, date.today(), user2.id)
+
+    # User1 trying to book own listing
+    booking1 = create_booking(user1.id, listing1.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 2, 2))
+
+    assert booking1 is None
+
+    # User1 trying to book user2's listing
+    booking2 = create_booking(user1.id, listing2.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 2, 2))
+
+    assert booking2 is not None
+
+    # User2 trying to book own listing
+    booking3 = create_booking(user2.id, listing2.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 2, 2))
+
+    assert booking3 is None
+
+    # User2 trying to book user1's listing
+    booking4 = create_booking(user2.id, listing1.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 2, 2))
+
+    assert booking4 is not None
+
+    # User1 trying to book some other user's listing
+    booking5 = create_booking(user1.id, listing0.id,
+                              start_date=date(2021, 1, 1),
+                              end_date=date(2021, 1, 2))
+
+    assert booking5 is not None
+
+    # User2 trying to book some other user's listing
+    booking6 = create_booking(user2.id, listing0.id,
+                              start_date=date(2021, 1, 3),
+                              end_date=date(2021, 1, 4))
+
+    assert booking6 is not None
+
+
+def test_booking_backend_3():
+    """
+    A user cannot book a listing that costs more than his/her balance
+
+    Testing method: boundary testing
+    """
+
+    # Create some users
+    user1 = register(name="bookingbackend3a",
+                     email="bookingbackend3a@email.com",
+                     password="Password21$")
+    user2 = register(name="bookingbackend3b",
+                     email="bookingbackend3b@email.com",
+                     password="Password21$")
+
+    # Set up user balances
+    user1.balance = 500.00
+    user2.balance = 6000.00
+
+    # Create some listings
+    listing1 = create_listing(
+        "bookingbackend3b",
+        "This is a lot of descriptions and it is about a house",
+        5000.00, date.today(), user1.id)
+    listing2 = create_listing(
+        "bookingbackend3c",
+        "This is a lot of descriptions and it is about a house",
+        1000.00, date.today(), user2.id)
+
+    # User1 does not have enough money for user2's listing
+    booking1 = create_booking(user1.id, listing2.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 2, 2))
+
+    assert booking1 is None
+
+    # User1 does not have enough money for user2's listing
+    user1.balance = 999.99
+    booking2 = create_booking(user1.id, listing2.id,
+                              start_date=date(2022, 2, 3),
+                              end_date=date(2022, 2, 4))
+
+    assert booking2 is None
+
+    # User1 has enough money for user2's listing
+    user1.balance = 1000.01
+    booking3 = create_booking(user1.id, listing2.id,
+                              start_date=date(2022, 2, 5),
+                              end_date=date(2022, 2, 6))
+
+    assert booking3 is not None
+
+    # User2 has enough money for user1's listing
+    booking4 = create_booking(user2.id, listing1.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 2, 2))
+
+    assert booking4 is not None
+
+    # User2 has enough money for user1's listing
+    user2.balance = 5000.01
+    booking5 = create_booking(user2.id, listing1.id,
+                              start_date=date(2022, 2, 3),
+                              end_date=date(2022, 2, 4))
+
+    assert booking5 is not None
+
+    # User2 does not have enough money for user1's listing
+    user2.balance = 4999.99
+    booking6 = create_booking(user2.id, listing1.id,
+                              start_date=date(2022, 2, 5),
+                              end_date=date(2022, 2, 6))
+
+    assert booking6 is None
+
+
+def test_booking_backend_4():
+    """
+    A user cannot book a listing that is already booked with
+    the overlapped dates
+
+    Testing method: partition testing
+    """
+
+    # Create some users
+    user1 = register(name="bookingbackend4a",
+                     email="bookingbackend4a@email.com",
+                     password="Password21$")
+    user2 = register(name="bookingbackend4b",
+                     email="bookingbackend4b@email.com",
+                     password="Password21$")
+    user3 = register(name="bookingbackend4c",
+                     email="bookingbackend4c@email.com",
+                     password="Password21$")
+
+    # Set up user balances
+    user1.balance = 10000.00
+    user2.balance = 10000.00
+    user3.balance = 10000.00
+
+    # Create some listings
+    listing1 = create_listing(
+        "bookingbackend4b",
+        "This is a lot of descriptions and it is about a house",
+        1000.00, date.today(), user1.id)
+    listing2 = create_listing(
+        "bookingbackend4c",
+        "This is a lot of descriptions and it is about a house",
+        1000.00, date.today(), user2.id)
+
+    # User1 first booking user2's listing
+    booking1 = create_booking(user1.id, listing2.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 4, 2))
+
+    assert booking1 is not None
+
+    # User2 first booking user1's listing
+    booking2 = create_booking(user2.id, listing1.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 4, 2))
+
+    assert booking2 is not None
+
+    # User3 booking user1's listing (non-overlapping with user2)
+    booking3 = create_booking(user3.id, listing1.id,
+                              start_date=date(2022, 5, 1),
+                              end_date=date(2022, 6, 2))
+
+    assert booking3 is not None
+
+    # User3 booking user1's listing (overlapping with user2)
+    booking4 = create_booking(user3.id, listing1.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 3, 2))
+
+    assert booking4 is None
+
+    # User2 booking user1's listing (overlapping with user3)
+    booking5 = create_booking(user2.id, listing1.id,
+                              start_date=date(2022, 5, 1),
+                              end_date=date(2022, 5, 8))
+
+    assert booking5 is None
+
+    # User2 booking user1's listing (non-overlapping with user3)
+    booking6 = create_booking(user2.id, listing1.id,
+                              start_date=date(2022, 8, 1),
+                              end_date=date(2022, 9, 8))
+
+    assert booking6 is not None
+    
+    # User3 booking user2's listing (overlapping with user1)
+    booking7 = create_booking(user3.id, listing2.id,
+                              start_date=date(2022, 2, 1),
+                              end_date=date(2022, 2, 12))
+
+    assert booking7 is None
+
+    # User3 booking user2's listing (non-overlapping with user1)
+    booking8 = create_booking(user3.id, listing2.id,
+                              start_date=date(2022, 1, 1),
+                              end_date=date(2022, 1, 8))
+
+    assert booking8 is not None
+    
+    # User1 booking user2's listing (overlapping with user3)
+    booking9 = create_booking(user1.id, listing2.id,
+                              start_date=date(2022, 1, 2),
+                              end_date=date(2022, 1, 4))
+
+    assert booking9 is None
+
+    # User1 booking user2's listing (non-overlapping with user1)
+    booking10 = create_booking(user1.id, listing2.id,
+                               start_date=date(2022, 8, 1),
+                               end_date=date(2022, 9, 8))
+
+    assert booking10 is not None
