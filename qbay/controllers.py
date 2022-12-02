@@ -1,7 +1,7 @@
 from flask import render_template, request, session, redirect
-from qbay.models import login, User, Listing, register, create_listing
+from qbay.models import login, User, Listing, register, create_listing, create_booking
 from qbay.models import update_listing
-from datetime import date
+from datetime import date, datetime
 
 
 from qbay import app
@@ -204,6 +204,57 @@ def profile_update_post():
                                user_postal_placeholder=user.postal_code)
 
 
+@app.route('/booking', methods=['GET'])
+def booking_get():
+    """
+    Handles get command for booking page
+    """
+    listings = Listing.query.order_by(Listing.id).all()
+    return render_template('booking.html',
+                            listings=listings,
+                            message='')
+
+
+@app.route('/booking', methods=['POST'])
+def booking_post():
+    """
+    Handles post command for booking page
+    """
+
+    l_id = int(request.form.get('l_id'))
+    print('l_id', l_id)
+    start_date = datetime.strptime(request.form.get('start_date'), '%Y-%m-%d')
+    print('sheesh', type(datetime.now()))
+    end_date = datetime.strptime(request.form.get('end_date'), '%Y-%m-%d')
+
+    # Custom messages
+    err_msg = 'Invalid Input, Please Try Again!'
+    success_msg = 'Listing Booked!'
+
+    # access user by quering for the email in the current session
+    user = User.query.filter_by(email=session['logged_in']).first()
+    # access list of listings
+    listings = Listing.query.order_by(Listing.id).all()
+    listing = Listing.query.filter_by(id=l_id).first()
+
+    print(listing.price)
+    print(user.balance)
+
+    # Check for success after booking
+    success = create_booking(user_id=user.id, listing_id=l_id, start_date=start_date, end_date=end_date)
+
+
+    # If success render html
+    if success:
+        return render_template('booking.html',
+                                listings=listings,
+                                message=success_msg)
+    else:
+        return render_template('booking.html',
+                                listings=listings,
+                                message=err_msg)
+
+
 @app.route('/create_listing', methods=['GET'])
 def create_listing_get():
     """
@@ -212,7 +263,7 @@ def create_listing_get():
     # templates are stored in the templates folder
     listings = Listing.query.order_by(Listing.id).all()
     return render_template('create_listing.html',
-                           listings=listings, message='')
+                           listings=listings, message='poop')
 
 
 @app.route('/create_listing', methods=['POST'])
