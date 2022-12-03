@@ -260,7 +260,7 @@ def create_listing_get():
     # templates are stored in the templates folder
     listings = Listing.query.order_by(Listing.id).all()
     return render_template('create_listing.html',
-                           listings=listings, message='poop')
+                           listings=listings, message='')
 
 
 @app.route('/create_listing', methods=['POST'])
