@@ -235,7 +235,6 @@ def booking_post():
     user = User.query.filter_by(email=session['logged_in']).first()
     # access list of listings
     listings = Listing.query.order_by(Listing.id).all()
-    listing = Listing.query.filter_by(id=l_id).first()
 
     # Check for success after booking
     success = create_booking(user_id=user.id, listing_id=l_id,
