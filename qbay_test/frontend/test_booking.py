@@ -2,7 +2,7 @@ from seleniumbase import BaseCase
 
 from qbay_test.conftest import base_url
 
-from qbay.models import Listing
+from qbay.models import Listing, User, db
 
 from datetime import date
 
@@ -65,25 +65,37 @@ class FrontEndBookingTest(BaseCase):
         self.type('#password', self.valid_password)
         self.click('input[type="submit"]')
 
-        # Go to booking page
+        # add funds to second user's account
+        user = User.query.filter_by(email=str(self.counter) + self.valid_email).first()
+        user.balance = 9999.00
+        db.session.commit()
+        
+        # go to booking page
         self.open(base_url + "/booking")
 
         # book the listing other user posted
         listing = Listing.query.filter_by(title=str(self.counter - 1) + self.valid_listing_title).first()   
         self.type('#l_id', listing.id)
         self.type('#start_date', date.today())
-        self.type('#end_date', date(2024, 1, 2))
+        self.type('#end_date', date(2023, 1, 2))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
         self.assert_element('#message')
+        self.assert_text(self.success_message, '#message')
+        
+        # try to book a listing not in the database
+        listings = Listing.query.count()
+        # use an id greater than amount of listings in database
+        self.type('#l_id', listings + 1)
+        self.type('#start_date', date.today())
+        self.type('#end_date', date(2024, 1, 2))
+        self.click('input[type="submit"]')
+
+        # assert the booking was unsucessful
+        self.assert_element('#message')
         self.assert_text(self.e_message, '#message')
-
-
-
-
-
-
+        
 
     def test_2_booking(self, *_):
         '''
@@ -91,6 +103,8 @@ class FrontEndBookingTest(BaseCase):
 
         Testing method: partition testing
         '''
+        # keep counter out of range of other tests
+        self.counter = 50
 
     def test_3_booking(self, *_):
         '''
@@ -98,6 +112,8 @@ class FrontEndBookingTest(BaseCase):
 
         Testing method: boundary testing
         '''
+        # keep counter out of range of other tests
+        self.counter = 100
     
     def test_4_booking(self, *_):
         '''
@@ -106,6 +122,8 @@ class FrontEndBookingTest(BaseCase):
 
         Testing method: partition testing
         '''
+        # keep counter out of range of other tests
+        self.counter = 150
 
     def test_5_booking(self, *_):
         '''
