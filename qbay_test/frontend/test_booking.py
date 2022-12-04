@@ -2,13 +2,23 @@ from seleniumbase import BaseCase
 
 from qbay_test.conftest import base_url
 
+from qbay.models import Listing
+
+from datetime import date
+
 """
 This file defines all integration tests for the booking page.
 """
 
 
 class FrontEndBookingTest(BaseCase):
-
+    valid_name = "bookingname"
+    valid_email = "booking@email.com"
+    valid_password = 'Abc#123'
+    valid_listing_title = ' house st'
+    success_message = 'Listing Booked!'
+    e_message = 'Invalid Input, Please Try Again!'
+    counter = 0
 
     def test_1_booking(self, *_):
         '''
@@ -16,6 +26,63 @@ class FrontEndBookingTest(BaseCase):
 
         Testing method: partition testing
         '''
+        # open register page
+        self.open(base_url + '/register')
+
+        # register 
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#name', str(self.counter) + self.valid_name)
+        self.type('#password', self.valid_password)
+        self.type('#password2', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # log in as the registered user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#password', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # Create a Listing
+        self.open(base_url + "/create_listing")
+        self.type('#title', str(self.counter) + self.valid_listing_title)
+        self.type('#description', "A little run down shack on the side street")
+        self.type('#price', 500.00)
+
+        self.click('input[type="submit"]')
+
+        # open register page
+        self.open(base_url + '/register')
+        self.counter += 1
+
+        # register a second user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#name', str(self.counter) + self.valid_name)
+        self.type('#password', self.valid_password)
+        self.type('#password2', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # log in as the second user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#password', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # Go to booking page
+        self.open(base_url + "/booking")
+
+        # book the listing other user posted
+        listing = Listing.query.filter_by(title=str(self.counter - 1) + self.valid_listing_title).first()   
+        self.type('#l_id', listing.id)
+        self.type('#start_date', date.today())
+        self.type('#end_date', date(2024, 1, 2))
+        self.click('input[type="submit"]')
+
+        # assert the booking was sucessful
+        self.assert_element('#message')
+        self.assert_text(self.e_message, '#message')
+
+
+
+
+
 
 
     def test_2_booking(self, *_):
@@ -42,9 +109,9 @@ class FrontEndBookingTest(BaseCase):
 
     def test_5_booking(self, *_):
         '''
-        A booked listing will show up on the user's home page
+        A booked listing will show up on the user's home page.
 
-        Testing method: 
+        To be implemented later...
         '''
 
 
