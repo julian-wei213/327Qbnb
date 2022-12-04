@@ -1,7 +1,7 @@
 from flask import render_template, request, session, redirect
-from qbay.models import login, User, Listing, register, create_listing
-from qbay.models import update_listing
-from datetime import date
+from qbay.models import login, User, Listing, register
+from qbay.models import update_listing, create_listing, create_booking
+from datetime import date, datetime
 
 
 from qbay import app
@@ -202,6 +202,53 @@ def profile_update_post():
                                user_email_placeholder=user.email,
                                user_bill_placeholder=user.ship_addr,
                                user_postal_placeholder=user.postal_code)
+
+
+@app.route('/booking', methods=['GET'])
+def booking_get():
+    """
+    Handles get command for booking page
+    """
+    listings = Listing.query.order_by(Listing.id).all()
+    return render_template('booking.html',
+                           listings=listings,
+                           message='')
+
+
+@app.route('/booking', methods=['POST'])
+def booking_post():
+    """
+    Handles post command for booking page
+    """
+
+    l_id = int(request.form.get('l_id'))
+    start_date = datetime.strptime(request.form.get('start_date'),
+                                   '%Y-%m-%d').date()
+    end_date = datetime.strptime(request.form.get('end_date'),
+                                 '%Y-%m-%d').date()
+
+    # Custom messages
+    err_msg = 'Invalid Input, Please Try Again!'
+    success_msg = 'Listing Booked!'
+
+    # access user by quering for the email in the current session
+    user = User.query.filter_by(email=session['logged_in']).first()
+    # access list of listings
+    listings = Listing.query.order_by(Listing.id).all()
+
+    # Check for success after booking
+    success = create_booking(user_id=user.id, listing_id=l_id,
+                             start_date=start_date, end_date=end_date)
+
+    # If success render html
+    if success:
+        return render_template('booking.html',
+                               listings=listings,
+                               message=success_msg)
+    else:
+        return render_template('booking.html',
+                               listings=listings,
+                               message=err_msg)
 
 
 @app.route('/create_listing', methods=['GET'])

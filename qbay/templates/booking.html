@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Booking{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<h4 id='message'>{{message}}</h4>
+<h4>Select a Listing ID from the list below</h4>
+
+<form method="post">
+  <div class="form-group">
+    <label for="l_id">Booking ID</label>
+    <input class="form-control" name="l_id" id="l_id" required>
+    <label for="date_start">Start Date</label>
+    <input name="start_date" id="start_date" type="date" required>
+    <label for="end_date">End Date</label>
+    <input class="form-control" name="end_date" id="end_date" type="date" required>
+    <input class="btn btn-primary" type="submit" value="Book">
+  </div>
+</form>
+<div>
+
+<a href='/'>Back to home</a>
+
+<h4>List of Available Listings</h4>
+
+<table cellpadding="10" cellspacing="10">
+  <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Price</th>
+  </tr>
+  {% for listing in listings %}
+      <tr>
+          <td>{{ listing.id }}</td>
+          <td>{{ listing.title }}</td>
+          <td>{{ listing.description }}</td>
+          <td>{{'%0.2f' % listing.price|float }}</td>
+      </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

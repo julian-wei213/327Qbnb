@@ -8,23 +8,19 @@
 <h2 id="welcome-header">Welcome {{ user.name }} !</h2>
 
 
-<h2>Here are all available products</h2>
-
-<a href='/profile_update' id='profile_update'>Update Your Profile</a>
-
-<div id="products">
-    {% for product in products %}
-    <div>
-        <h4>name: {{ product.name }} price: {{ product.price }} <a href=''>update</a></h4>
-    </div>
-    {% endfor %}
-</div>
+<h2>Please select from the list below.</h2>
 
 <div>
-<a href='/create_listing'>Create listing</a>
+  <a href='/profile_update' id='profile_update'>Update Your Profile</a>
 </div>
 <div>
-<a href='/listing'>Update listing</a>
+  <a href='/booking' id='booking'>Book a Listing</a>
+</div>
+<div>
+  <a href='/create_listing'>Create listing</a>
+</div>
+<div>
+  <a href='/listing'>Update listing</a>
 </div>
 
 <a href='/logout'>logout</a>
