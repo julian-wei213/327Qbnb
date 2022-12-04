@@ -106,6 +106,84 @@ class FrontEndBookingTest(BaseCase):
         # keep counter out of range of other tests
         self.counter = 50
 
+        # open register page
+        self.open(base_url + '/register')
+
+        # register 
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#name', str(self.counter) + self.valid_name)
+        self.type('#password', self.valid_password)
+        self.type('#password2', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # log in as the registered user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#password', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # Create a Listing
+        self.open(base_url + "/create_listing")
+        self.type('#title', str(self.counter) + self.valid_listing_title)
+        self.type('#description', "A little run down shack on the side street")
+        self.type('#price', 500.00)
+
+        self.click('input[type="submit"]')
+
+        # add funds to user's account
+        user = User.query.filter_by(email=str(self.counter) + self.valid_email).first()
+        user.balance = 9999.00
+        db.session.commit()
+        
+        # go to booking page
+        self.open(base_url + "/booking")
+
+        # try to book listing user just posted
+        listing = Listing.query.filter_by(title=str(self.counter) + self.valid_listing_title).first()   
+        self.type('#l_id', listing.id)
+        self.type('#start_date', date.today())
+        self.type('#end_date', date(2023, 1, 2))
+        self.click('input[type="submit"]')
+
+        # assert the booking was unsucessful
+        self.assert_element('#message')
+        self.assert_text(self.e_message, '#message')
+
+        # open register page
+        self.open(base_url + '/register')
+        self.counter += 1
+
+        # register a second user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#name', str(self.counter) + self.valid_name)
+        self.type('#password', self.valid_password)
+        self.type('#password2', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # log in as the second user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#password', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # add funds to second user's account
+        user = User.query.filter_by(email=str(self.counter) + self.valid_email).first()
+        user.balance = 9999.00
+        db.session.commit()
+        
+        # go to booking page
+        self.open(base_url + "/booking")
+
+        # book the listing other user posted
+        listing = Listing.query.filter_by(title=str(self.counter - 1) + self.valid_listing_title).first()   
+        self.type('#l_id', listing.id)
+        self.type('#start_date', date.today())
+        self.type('#end_date', date(2023, 1, 2))
+        self.click('input[type="submit"]')
+
+        # assert the booking was sucessful
+        self.assert_element('#message')
+        self.assert_text(self.success_message, '#message')
+
+
     def test_3_booking(self, *_):
         '''
         A user cannot book a listing that costs more than his/her balance
