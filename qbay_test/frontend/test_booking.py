@@ -79,8 +79,10 @@ class FrontEndBookingTest(BaseCase):
         self.type('#l_id', listing.id)
         start_date = date(2022, 12, 4)
         end_date = date(2023, 2, 2)
-        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
@@ -93,8 +95,10 @@ class FrontEndBookingTest(BaseCase):
         self.type('#l_id', listings + 1)
         start_date = date(2022, 12, 4)
         end_date = date(2024, 2, 2)
-        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was unsucessful
@@ -148,8 +152,10 @@ class FrontEndBookingTest(BaseCase):
         self.type('#l_id', listing.id)
         start_date = date(2022, 12, 4)
         end_date = date(2023, 2, 2)
-        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was unsucessful
@@ -187,8 +193,10 @@ class FrontEndBookingTest(BaseCase):
         self.type('#l_id', listing.id)
         start_date = date(2022, 12, 4)
         end_date = date(2023, 2, 2)
-        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
@@ -258,8 +266,10 @@ class FrontEndBookingTest(BaseCase):
         self.type('#l_id', listing.id)
         start_date = date(2022, 12, 4)
         end_date = date(2023, 2, 2)
-        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was unsucessful
@@ -276,8 +286,10 @@ class FrontEndBookingTest(BaseCase):
         self.type('#l_id', listing.id)
         start_date = date(2022, 12, 4)
         end_date = date(2023, 2, 2)
-        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
@@ -348,8 +360,10 @@ class FrontEndBookingTest(BaseCase):
         self.type('#l_id', listing.id)
         start_date = date(2022, 12, 4)
         end_date = date(2023, 2, 2)
-        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
@@ -385,8 +399,10 @@ class FrontEndBookingTest(BaseCase):
         self.type('#l_id', listing.id)
         start_date = date(2022, 12, 4)
         end_date = date(2023, 5, 2)
-        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was unsucessful
@@ -397,8 +413,10 @@ class FrontEndBookingTest(BaseCase):
         self.type('#l_id', listing.id)
         start_date = date(2023, 2, 3)
         end_date = date(2023, 3, 2)
-        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
