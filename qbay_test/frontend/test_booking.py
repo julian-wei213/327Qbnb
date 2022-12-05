@@ -77,8 +77,10 @@ class FrontEndBookingTest(BaseCase):
         listing = Listing.query.filter_by(
             title=str(self.counter - 1) + self.valid_listing_title).first()
         self.type('#l_id', listing.id)
-        self.type('#start_date', date.today())
-        self.type('#end_date', date(2023, 1, 2))
+        start_date = date(2022, 12, 4)
+        end_date = date(2023, 2, 2)
+        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
@@ -89,8 +91,10 @@ class FrontEndBookingTest(BaseCase):
         listings = Listing.query.count()
         # use an id greater than amount of listings in database
         self.type('#l_id', listings + 1)
-        self.type('#start_date', date.today())
-        self.type('#end_date', date(2024, 1, 2))
+        start_date = date(2022, 12, 4)
+        end_date = date(2024, 2, 2)
+        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was unsucessful
@@ -142,8 +146,10 @@ class FrontEndBookingTest(BaseCase):
         listing = Listing.query.filter_by(
             title=str(self.counter) + self.valid_listing_title).first()
         self.type('#l_id', listing.id)
-        self.type('#start_date', date.today())
-        self.type('#end_date', date(2023, 1, 2))
+        start_date = date(2022, 12, 4)
+        end_date = date(2023, 2, 2)
+        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was unsucessful
@@ -179,8 +185,10 @@ class FrontEndBookingTest(BaseCase):
         listing = Listing.query.filter_by(
             title=str(self.counter - 1) + self.valid_listing_title).first()
         self.type('#l_id', listing.id)
-        self.type('#start_date', date.today())
-        self.type('#end_date', date(2023, 1, 2))
+        start_date = date(2022, 12, 4)
+        end_date = date(2023, 2, 2)
+        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
@@ -248,8 +256,10 @@ class FrontEndBookingTest(BaseCase):
         listing = Listing.query.filter_by(
             title=str(self.counter - 1) + self.valid_listing_title).first()
         self.type('#l_id', listing.id)
-        self.type('#start_date', date.today())
-        self.type('#end_date', date(2023, 1, 2))
+        start_date = date(2022, 12, 4)
+        end_date = date(2023, 2, 2)
+        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was unsucessful
@@ -264,8 +274,10 @@ class FrontEndBookingTest(BaseCase):
 
         # try to book again
         self.type('#l_id', listing.id)
-        self.type('#start_date', date.today())
-        self.type('#end_date', date(2023, 1, 2))
+        start_date = date(2022, 12, 4)
+        end_date = date(2023, 2, 2)
+        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
@@ -334,8 +346,10 @@ class FrontEndBookingTest(BaseCase):
         listing = Listing.query.filter_by(
             title=str(self.counter - 1) + self.valid_listing_title).first()
         self.type('#l_id', listing.id)
-        self.type('#start_date', date.today())
-        self.type('#end_date', date(2023, 1, 2))
+        start_date = date(2022, 12, 4)
+        end_date = date(2023, 2, 2)
+        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
@@ -369,8 +383,10 @@ class FrontEndBookingTest(BaseCase):
 
         # try to book the listing first user posted as overlapping time
         self.type('#l_id', listing.id)
-        self.type('#start_date', date.today())
-        self.type('#end_date', date(2023, 5, 2))
+        start_date = date(2022, 12, 4)
+        end_date = date(2023, 5, 2)
+        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was unsucessful
@@ -379,8 +395,10 @@ class FrontEndBookingTest(BaseCase):
 
         # try to book the listing after second user's booking ends
         self.type('#l_id', listing.id)
-        self.type('#start_date', date(2023, 1, 3))
-        self.type('#end_date', date(2023, 3, 2))
+        start_date = date(2023, 2, 3)
+        end_date = date(2023, 3, 2)
+        self.type('#start_date', str(start_date.year) + str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) + str(end_date.month) + str(end_date.day))
         self.click('input[type="submit"]')
 
         # assert the booking was sucessful
