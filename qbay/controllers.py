@@ -1,5 +1,5 @@
 from flask import render_template, request, session, redirect
-from qbay.models import login, User, Listing, register
+from qbay.models import login, User, Listing, register, Booking
 from qbay.models import update_listing, create_listing, create_booking
 from datetime import date, datetime
 
@@ -84,12 +84,10 @@ def home(user):
     # the login checking code all the time for other
     # front-end portals
 
-    # some fake product data
-    products = [
-        {'name': 'prodcut 1', 'price': 10},
-        {'name': 'prodcut 2', 'price': 20}
-    ]
-    return render_template('index.html', user=user, products=products)
+    # Find all bookings that the user booked and display them
+    bookings = Booking.query.filter_by(user_id=user.id).all()
+
+    return render_template('index.html', user=user, bookings=bookings)
 
 
 @app.route('/register', methods=['GET'])
