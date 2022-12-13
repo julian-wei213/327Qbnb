@@ -1,3 +1,4 @@
+import random
 from seleniumbase import BaseCase
 
 from qbay_test.conftest import base_url
@@ -427,8 +428,9 @@ class FrontEndBookingTest(BaseCase):
         '''
         A booked listing will show up on the user's home page.
 
-        Testing method: partition testing
+        Testing method: shotgun testing
         '''
+        number_of_listings = 25
         # keep counter out of range of other tests
         self.counter = 200
 
@@ -447,13 +449,14 @@ class FrontEndBookingTest(BaseCase):
         self.type('#password', self.valid_password)
         self.click('input[type="submit"]')
 
-        # Create a Listing
+        # Create a bunch of listings
         self.open(base_url + "/create_listing")
-        self.type('#title', str(self.counter) + self.valid_listing_title)
-        self.type('#description', "A little run down shack on the side street")
-        self.type('#price', 500.00)
-
-        self.click('input[type="submit"]')
+        for i in range(number_of_listings):
+            listing_val = self.counter + i
+            self.type('#title', str(listing_val) + self.valid_listing_title)
+            self.type('#description', "A little run down shack.")
+            self.type('#price', 10.00)
+            self.click('input[type="submit"]')
 
         # open register page
         self.open(base_url + '/register')
@@ -474,30 +477,37 @@ class FrontEndBookingTest(BaseCase):
         # add funds to second user
         user = User.query.filter_by(
             email=str(self.counter) + self.valid_email).first()
-        user.balance = 1000.00
+        user.balance = 10000.00
         db.session.commit()
 
         # go to booking page
         self.open(base_url + "/booking")
 
-        # book the listing first user posted
-        listing = Listing.query.filter_by(
-            title=str(self.counter - 1) + self.valid_listing_title).first()
-        self.type('#l_id', listing.id)
-        start_date = date(2022, 12, 4)
-        end_date = date(2023, 2, 2)
-        self.type('#start_date', str(start_date.year) +
-                  str(start_date.month) + str(start_date.day))
-        self.type('#end_date', str(end_date.year) +
-                  str(end_date.month) + str(end_date.day))
-        self.click('input[type="submit"]')
+        # book a bunch of listings the first user posted
+        booked_listings = []
+        for i in range(int(number_of_listings / 2)):
+            # pick a random listing posted by first user
+            listing_val = (self.counter-1) + random.randint(0, number_of_listings-1)
+            # make sure it hasn't been booked already
+            while (listing_val in booked_listings):
+                listing_val = (self.counter-1) + random.randint(0, number_of_listings-1)
+            booked_listings.append(listing_val)
+            listing = Listing.query.filter_by(title=str(listing_val) + self.valid_listing_title).first()
+            self.type('#l_id', listing.id)
+            start_date = date(2022, 12, 4)
+            end_date = date(2023, 2, 2)
+            self.type('#start_date', str(start_date.year) +
+                      str(start_date.month) + str(start_date.day))
+            self.type('#end_date', str(end_date.year) +
+                      str(end_date.month) + str(end_date.day))
+            self.click('input[type="submit"]')
 
-        # assert the booking was sucessful
-        self.assert_element('#message')
-        self.assert_text(self.success_message, '#message')
+            # assert the booking was sucessful
+            self.assert_element('#message')
+            self.assert_text(self.success_message, '#message')
 
         # go to home page
         self.open(base_url)
-
+        # make sure all the successful bookings were added to the table
         for booking in Booking.query.filter_by(user_id=user.id).all():
-            self.get_element('#' + str(booking.id))
+            self.get_element('#booking_' + str(booking.id))
