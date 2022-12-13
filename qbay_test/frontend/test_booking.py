@@ -473,7 +473,7 @@ class FrontEndBookingTest(BaseCase):
                 random.randint(0, number_of_listings - 1)
             # make sure it hasn't been booked already
             while (listing_val in booked_listings):
-                listing_val = (self.counter-1) + \
+                listing_val = (self.counter - 1) + \
                     random.randint(0, number_of_listings - 1)
             booked_listings.append(listing_val)
             listing = Listing.query.filter_by(
