@@ -429,3 +429,77 @@ class FrontEndBookingTest(BaseCase):
 
         To be implemented later...
         '''
+        # keep counter out of range of other tests
+        self.counter = 200
+
+        # open register page
+        self.open(base_url + '/register')
+
+        # register
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#name', str(self.counter) + self.valid_name)
+        self.type('#password', self.valid_password)
+        self.type('#password2', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # log in as the registered user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#password', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # Create a Listing
+        self.open(base_url + "/create_listing")
+        self.type('#title', str(self.counter) + self.valid_listing_title)
+        self.type('#description', "A little run down shack on the side street")
+        self.type('#price', 500.00)
+
+        self.click('input[type="submit"]')
+
+        # open register page
+        self.open(base_url + '/register')
+        self.counter += 1
+
+        # register a second user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#name', str(self.counter) + self.valid_name)
+        self.type('#password', self.valid_password)
+        self.type('#password2', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # log in as the second user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#password', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # sets funds 
+        user = User.query.filter_by(
+            email=str(self.counter) + self.valid_email).first()
+        user.balance = 1000
+        db.session.commit()
+
+        # go to booking page
+        self.open(base_url + "/booking")
+
+        # book the listing other user posted
+        listing = Listing.query.filter_by(
+            title=str(self.counter - 1) + self.valid_listing_title).first()
+        self.type('#l_id', listing.id)
+        start_date = date(2022, 12, 4)
+        end_date = date(2023, 2, 2)
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
+        self.click('input[type="submit"]')
+
+        # assert the booking was successful
+        self.assert_element('#message')
+        self.assert_text(self.success_message, '#message')
+
+        # open home page
+        self.open(base_url)
+
+        
+
+
+
