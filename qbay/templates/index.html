@@ -27,7 +27,7 @@
 
 <h4>Your Bookings:</h4>
 
-<table cellpadding="10" cellspacing="10">
+<table cellpadding="10" cellspacing="10" id="bookings_table">
   <tr>
       <th>Booking ID</th>
       <th>Listing ID</th>
@@ -37,7 +37,7 @@
   </tr>
   {% for book in bookings %}
       <tr>
-          <td>{{ book.id }}</td>
+          <td id=book.id>{{ book.id }}</td>
           <td>{{ book.listing_id }}</td>
           <td>{{ book.booking_date }}</td>
           <td>{{ book.start_date }}</td>

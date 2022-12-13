@@ -2,7 +2,7 @@ from seleniumbase import BaseCase
 
 from qbay_test.conftest import base_url
 
-from qbay.models import Listing, User, db
+from qbay.models import Listing, User, db, Booking
 
 from datetime import date
 
@@ -427,5 +427,77 @@ class FrontEndBookingTest(BaseCase):
         '''
         A booked listing will show up on the user's home page.
 
-        To be implemented later...
+        Testing method: partition testing
         '''
+        # keep counter out of range of other tests
+        self.counter = 200
+
+        # open register page
+        self.open(base_url + '/register')
+
+        # register
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#name', str(self.counter) + self.valid_name)
+        self.type('#password', self.valid_password)
+        self.type('#password2', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # log in as the registered user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#password', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # Create a Listing
+        self.open(base_url + "/create_listing")
+        self.type('#title', str(self.counter) + self.valid_listing_title)
+        self.type('#description', "A little run down shack on the side street")
+        self.type('#price', 500.00)
+
+        self.click('input[type="submit"]')
+
+        # open register page
+        self.open(base_url + '/register')
+        self.counter += 1
+
+        # register a second user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#name', str(self.counter) + self.valid_name)
+        self.type('#password', self.valid_password)
+        self.type('#password2', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # log in as the second user
+        self.type('#email', str(self.counter) + self.valid_email)
+        self.type('#password', self.valid_password)
+        self.click('input[type="submit"]')
+
+        # add funds to second user
+        user = User.query.filter_by(
+            email=str(self.counter) + self.valid_email).first()
+        user.balance = 1000.00
+        db.session.commit()
+
+        # go to booking page
+        self.open(base_url + "/booking")
+
+        # book the listing first user posted
+        listing = Listing.query.filter_by(
+            title=str(self.counter - 1) + self.valid_listing_title).first()
+        self.type('#l_id', listing.id)
+        start_date = date(2022, 12, 4)
+        end_date = date(2023, 2, 2)
+        self.type('#start_date', str(start_date.year) +
+                  str(start_date.month) + str(start_date.day))
+        self.type('#end_date', str(end_date.year) +
+                  str(end_date.month) + str(end_date.day))
+        self.click('input[type="submit"]')
+
+        # assert the booking was sucessful
+        self.assert_element('#message')
+        self.assert_text(self.success_message, '#message')
+
+        # go to home page
+        self.open(base_url)
+
+        for booking in Booking.query.filter_by(user_id=user.id).all():
+            self.get_element('#' + str(booking.id))
