@@ -476,12 +476,10 @@ class FrontEndBookingTest(BaseCase):
             booked_listings.append(listing_val)
             listing = Listing.query.filter_by(title=str(listing_val) + self.valid_listing_title).first()
             self.type('#l_id', listing.id)
-            start_date = date(2022, 12, 4)
-            end_date = date(2023, 2, 2)
-            self.type('#start_date', str(start_date.year) +
-                      str(start_date.month) + str(start_date.day))
-            self.type('#end_date', str(end_date.year) +
-                      str(end_date.month) + str(end_date.day))
+            start_date = date(2023, 2, 3)
+            end_date = date(2023, 3, 2)
+            self.type('#start_date', str(start_date))
+            self.type('#end_date', str(end_date))
             self.click('input[type="submit"]')
 
             # assert the booking was sucessful
